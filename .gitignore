@@ -1,0 +1,9 @@
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+csv/*.csv
+datasets/*.*
+saved_model/*.*
+# Dependency directories (remove the comment below to include it)
+# vendor/
