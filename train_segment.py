@@ -37,7 +37,7 @@ def input_fn1(features, labels, training=True, batch_size=256):
         #tf.keras.backend.set_floatx('float64')
         # Shuffle and repeat if you are in training mode.
         if training:
-            dataset = dataset.shuffle(1000).repeat()
+            dataset = dataset.shuffle(10000).repeat()
         return dataset.batch(batch_size)
 #
 
@@ -97,7 +97,7 @@ with tf.device("/device:cpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[1024, 512, 256],
+        hidden_units=[64, 32],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -107,7 +107,7 @@ with tf.device("/device:cpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=1000)
+        steps=10000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
