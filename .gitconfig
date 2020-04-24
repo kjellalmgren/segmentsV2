@@ -1,0 +1,5 @@
+[user]
+    email = kjell.almgren@tetracon.se
+    user = kjellalmgren
+[credential]
+    helper = store
