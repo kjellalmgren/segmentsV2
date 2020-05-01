@@ -107,7 +107,7 @@ with tf.device("/device:cpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=10000)
+        steps=20000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
