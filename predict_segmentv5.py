@@ -29,7 +29,7 @@ with tf.device("/device:cpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[100, 50],
+        hidden_units=[32, 32],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -57,9 +57,9 @@ with tf.device("/device:cpu:0"):
     #    predict[feature] = [float(val)]
 
     predict_x = {
-        'Region': [20.0, 20.0, 30.0, 40.0, 10.0],
-        'Office': [11.0, 12.0, 22.0, 31.0, 32.0],
-        'Revenue': [2195.0, 3500.0, 5210.0, 8948.0, 1114.0],
+        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
+        'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
+        'Revenue': [1948.0, 22000.0, 65000.0, 51000.0, 89114.0],
     }
 
     #     

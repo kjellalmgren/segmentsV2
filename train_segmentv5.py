@@ -97,7 +97,7 @@ with tf.device("/device:cpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[100, 50],
+        hidden_units=[32, 32],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -107,7 +107,7 @@ with tf.device("/device:cpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=20000)
+        steps=50000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
