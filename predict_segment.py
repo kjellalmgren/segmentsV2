@@ -13,7 +13,7 @@ print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('
 COLUMN_NAMES = ['Region', 'Office', 'Revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
-with tf.device("/device:cpu:0"):
+with tf.device("/device:gpu:0"):
 
     expected = ['mini', 'micro', 'mellan', 'stor']
     class_names = ['mini', 'micro', 'mellan', 'stor']

@@ -24,8 +24,8 @@ def input_fn1(features, labels, training=True, batch_size=256):
             dataset = dataset.shuffle(1000).repeat()
         return dataset.batch(batch_size)
 #
-with tf.device("/device:cpu:0"):
-    print("Entering CPU-device for computation...")
+with tf.device("/device:gpu:0"):
+    print("Entering GPU-device for computation...")
     #
     # Get training and evaluation dataset from tensorlake at localhost, if not available or
     # cached it will be found under path /.keras/datasets/
