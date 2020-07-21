@@ -4,6 +4,7 @@ from tensorflow import keras
 import pandas as pd
 import numpy as np
 import os
+from matplotlib import pyplot
 
 import datetime
 
@@ -107,7 +108,7 @@ with tf.device("/device:gpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=20000)
+        steps=50000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
@@ -119,3 +120,5 @@ with tf.device("/device:gpu:0"):
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
 
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+    
