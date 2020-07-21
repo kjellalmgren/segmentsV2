@@ -1,5 +1,7 @@
 # readme
 
+    https://machinelearningmastery.com/clustering-algorithms-with-python/
+
 ## Matplotlib for python
 
     $ which matplotlib
