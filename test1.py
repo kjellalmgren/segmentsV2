@@ -9,12 +9,15 @@ from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import models
 from tensorflow.keras import layers
 
+
 #Read the data from csv file
-df = pd.read_csv('covtype.csv')
+df = pd.read_csv('datasets/segment_training_v5.csv')
 #Select predictors
-x = df[df.columns[:54]]
+x = df[df.columns[:3]]
 #Target variable 
-y = df.Cover_Type
+y = df.Segment
+print("x: {}", x)
+print("y: {}", y)
 #Split data into train and test 
 x_train, x_test, y_train, y_test = train_test_split(x, y , train_size = 0.7, random_state =  90)
 #'''As y variable is multi class categorical variable, hence using softmax as activation function and sparse-categorical cross entropy as loss function.'''
@@ -25,7 +28,7 @@ model = tensorflow.keras.Sequential([
  tensorflow.keras.layers.Dense(8, activation=  'softmax')
  ])
 
-model.compile(optimizer=tf.train.AdamOptimizer(),
+model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 history1 = model.fit(
