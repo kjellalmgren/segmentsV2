@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np
 import os
 from matplotlib import pyplot
+from sklearn import preprocessing
 
 import datetime
 
@@ -61,9 +62,20 @@ with tf.device("/device:gpu:0"):
     print(dftrain.head())
     print("--dfeval.head() --------------------------------------------------------")
     print(dfeval.head())
+    print("--dftrain_norm.head() --------------------------------------------------")
+    dftrain_norm = dftrain[dftrain.columns[1:4]]
+    print(dftrain_norm)
+    print("--dfeval_norm.head() ----------------------------------------------------")
+    dfeval_norm = dfeval[dfeval.columns[1:4]]
+    print(dfeval_norm.head())
+    std_scale = preprocessing.StandardScaler().fit(dftrain_norm)
+    x_dftrain_norm = std_scale.transform(dftrain_norm)
+    print("--x_dftrain_norm.head() -------------------------------------------------")
+    print(x_dftrain_norm)
     #
     # SEGMENTS = dftrain["Segment"].unique()
     y_train = dftrain.pop('Segment')
+    # y_train /= 255
     y_eval = dfeval.pop('Segment')
     #print(SEGMENTS)
     print("-- dftrain.head() ------------------------------------------------------")
