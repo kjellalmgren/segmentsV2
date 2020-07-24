@@ -3,6 +3,8 @@
     https://machinelearningmastery.com/clustering-algorithms-with-python/
     https://medium.com/@urvashilluniya/why-data-normalization-is-necessary-for-machine-learning-models-681b65a05029#:~:text=The%20goal%20of%20normalization%20is,when%20features%20have%20different%20ranges.
 
+    https://www.tensorflow.org/tutorials/keras/save_and_load
+
 ## Matplotlib for python
 
     $ which matplotlib

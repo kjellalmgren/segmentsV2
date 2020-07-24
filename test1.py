@@ -31,7 +31,7 @@ model = tensorflow.keras.Sequential([
                             activation='softmax')
  ])
 
-model.compile(optimizer='adam',
+model.compile(optimizer=tf.keras.optimizers.AdamOptimizer(),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
 history1 = model.fit(
@@ -41,4 +41,4 @@ history1 = model.fit(
     validation_data=(x_test, y_test))
 #
 #model.evaluate(x_train, y_train)
-model.save("saved_model/segment_model_v6")
+model.save("saved_model/segment_model_v61")

@@ -1,5 +1,4 @@
 from sklearn import preprocessing
-import tensorflow as tf
 import pandas as pd
 # from sklearn.cross_validation import train_test_split
 from sklearn.model_selection import train_test_split
@@ -48,13 +47,16 @@ x_train_norm = std_scale.transform(train_norm)
 #Converting numpy array to dataframe
 training_norm_col = pd.DataFrame(x_train_norm, index=train_norm.index, columns=train_norm.columns) 
 x_train.update(training_norm_col)
-print (x_train.head())
+print("- x_train -----------")
+print(x_train.head())
+print("---------------------")
 # Normalize Testing Data by using mean and SD of training set
 x_test_norm = std_scale.transform(test_norm)
 testing_norm_col = pd.DataFrame(x_test_norm, index=test_norm.index, columns=test_norm.columns) 
 x_test.update(testing_norm_col)
-print (x_train_norm)
-
+print("- x_test -----------")
+print(x_test_norm)
+print("---------------------")
 #Build neural network model with normalized data
 model = tensorflow.keras.Sequential([
  tensorflow.keras.layers.Dense(64,
@@ -79,25 +81,20 @@ cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_m
                                                  save_weights_only=True,
                                                  verbose=1)
 #
-model.compile(optimizer='adam',
+model.compile(optimizer=tf.keras.optimizers.Adam(),
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
-print("--------------------------")
-
-print("--------------------------")
 #
 history2 = model.fit(
-                x_train_norm, # input
+                x_train, # input
                 y_train, # output
                 epochs=26,
                 batch_size=60,
                 verbose=1,  # Supress chatty output; use Tensorboard instead
-                validation_data=(x_test_norm, y_test),
+                validation_data=(x_test, y_test),
                 callbacks=[tensorboard_callback, cp_callback]) # comment out lr_callback
 #
-model.train_on_batch(x_test_norm, y_test)
-#
-loss, acc = model.evaluate(x_train_norm, y_train, 
+loss, acc = model.evaluate(x_train, y_train, 
                             batch_size=60,
                             verbose=2,
                             callbacks=[tensorboard_callback, cp_callback])
