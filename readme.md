@@ -15,7 +15,7 @@
     # /home/kjell
     $ mkdir logdir
     # startup tensorboard on localhost:6006
-    # NOT WORKING 
+    # NOT WORKING ***WORK-OUT WHY ***
     $ tensorboard --logdir /logdir
     # working
-    $ tensorboard --logdor .
+    $ tensorboard --logdir .

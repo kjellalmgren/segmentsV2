@@ -132,5 +132,3 @@ with tf.device("/device:gpu:0"):
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
 
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
-
-

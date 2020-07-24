@@ -9,7 +9,29 @@ import tensorflow.keras
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras import models
 from tensorflow.keras import layers
+from datetime import datetime
 
+logdir = "saved_model/segment_model_v6/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+file_writer = tf.summary.create_file_writer(logdir + "/metrics")
+file_writer.set_as_default()
+
+def lr_schedule(epoch):
+  """
+  Returns a custom learning rate that decreases as epochs progress.
+  """
+  learning_rate = 0.2
+  if epoch > 10:
+    learning_rate = 0.02
+  if epoch > 20:
+    learning_rate = 0.01
+  if epoch > 50:
+    learning_rate = 0.005
+
+  tf.summary.scalar('learning rate', data=learning_rate, step=epoch)
+  return learning_rate
+#
+# here we go
+#
 df = pd.read_csv('datasets/segment_training_v5.csv')
 # set revenue as predictor
 x = df[df.columns[:3]]
@@ -35,16 +57,58 @@ print (x_train_norm)
 
 #Build neural network model with normalized data
 model = tensorflow.keras.Sequential([
- tensorflow.keras.layers.Dense(64, activation=tf.nn.relu,                  
- input_shape=(x_train_norm.shape[1],)),
- tensorflow.keras.layers.Dense(64, activation=tf.nn.relu),
- tensorflow.keras.layers.Dense(8, activation='softmax')
+ tensorflow.keras.layers.Dense(64,
+                            activation=tf.nn.relu,                  
+                            input_shape=(x_train_norm.shape[1],)),
+                            tensorflow.keras.layers.Dense(64,
+                            activation=tf.nn.relu),
+                            tensorflow.keras.layers.Dense(8,
+                            activation='softmax')
  ])
-
+#
+# lr_callback, learning rate, not used in thsi project
+lr_callback = tf.keras.callbacks.LearningRateScheduler(lr_schedule)
+# tensorboard callback
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segment_model_v6/tensorboard",
+                                                    write_graph=True,
+                                                    embeddings_freq=5,
+                                                    histogram_freq=5,
+                                                    embeddings_layer_names=None, embeddings_metadata=None)
+# Create a callback that saves the model's weights
+cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v6/weights",
+                                                 save_weights_only=True,
+                                                 verbose=1)
+#
 model.compile(optimizer='adam',
               loss='sparse_categorical_crossentropy',
               metrics=['accuracy'])
+print("--------------------------")
+
+print("--------------------------")
+#
 history2 = model.fit(
- x_train_norm, y_train,
- epochs=26, batch_size = 60,
- validation_data = (x_test_norm, y_test))
+                x_train_norm, # input
+                y_train, # output
+                epochs=26,
+                batch_size=60,
+                verbose=1,  # Supress chatty output; use Tensorboard instead
+                validation_data=(x_test_norm, y_test),
+                callbacks=[tensorboard_callback, cp_callback]) # comment out lr_callback
+#
+model.train_on_batch(x_test_norm, y_test)
+#
+loss, acc = model.evaluate(x_train_norm, y_train, 
+                            batch_size=60,
+                            verbose=2,
+                            callbacks=[tensorboard_callback, cp_callback])
+#
+print("loss: {}", loss)
+print("accuracy: {:5.2f}%".format(100*acc))
+#
+# saved_format=[tf.h5]
+tf.saved_model.SaveOptions(save_debug_info=False, namespace_whitelist=None, function_aliases=None)
+model.save("saved_model/segment_model_v6",
+                    save_format=tf,
+                    overwrite=True,
+                    include_optimizer=True)
+model.summary()
