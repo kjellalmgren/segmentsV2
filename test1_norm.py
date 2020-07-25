@@ -54,14 +54,16 @@ print("---------------------")
 x_test_norm = std_scale.transform(test_norm)
 testing_norm_col = pd.DataFrame(x_test_norm, index=test_norm.index, columns=test_norm.columns) 
 x_test.update(testing_norm_col)
-print("- x_test -----------")
+print("- x_test ------------")
 print(x_test_norm)
+print("- x_train_updated ---")
+print(x_train.head())
 print("---------------------")
 #Build neural network model with normalized data
 model = tensorflow.keras.Sequential([
  tensorflow.keras.layers.Dense(64,
                             activation=tf.nn.relu,                  
-                            input_shape=(x_train_norm.shape[1],)),
+                            input_shape=(x_train.shape[1],)),
                             tensorflow.keras.layers.Dense(64,
                             activation=tf.nn.relu),
                             tensorflow.keras.layers.Dense(8,
@@ -75,7 +77,8 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segme
                                                     write_graph=True,
                                                     embeddings_freq=5,
                                                     histogram_freq=5,
-                                                    embeddings_layer_names=None, embeddings_metadata=None)
+                                                    embeddings_layer_names=None,
+                                                    embeddings_metadata=None)
 # Create a callback that saves the model's weights
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v6/weights",
                                                  save_weights_only=True,
@@ -94,6 +97,7 @@ history2 = model.fit(
                 validation_data=(x_test, y_test),
                 callbacks=[tensorboard_callback, cp_callback]) # comment out lr_callback
 #
+print(history2.history)
 loss, acc = model.evaluate(x_train, y_train, 
                             batch_size=60,
                             verbose=2,

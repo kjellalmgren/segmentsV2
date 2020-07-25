@@ -19,5 +19,6 @@
     # startup tensorboard on localhost:6006
     # NOT WORKING ***WORK-OUT WHY ***
     $ tensorboard --logdir /logdir
+    $ tensorboard --logdir /Documents/tensorrep/src/segmentsV2/saved_model/segment_model_v6
     # working
     $ tensorboard --logdir .
