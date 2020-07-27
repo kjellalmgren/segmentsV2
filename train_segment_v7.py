@@ -1,3 +1,10 @@
+# #################################################
+# train_segment_v7.py (normalized dataset)
+# author: Kjell Osse almgren
+# date: 2020-07-25
+# version: 0.5.0
+# #################################################
+#
 from sklearn import preprocessing
 import pandas as pd
 # from sklearn.cross_validation import train_test_split
@@ -10,7 +17,7 @@ from tensorflow.keras import models
 from tensorflow.keras import layers
 from datetime import datetime
 
-logdir = "saved_model/segment_model_v6/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
+logdir = "saved_model/segment_model_v7/logs/scalars/" + datetime.now().strftime("%Y%m%d-%H%M%S")
 file_writer = tf.summary.create_file_writer(logdir + "/metrics")
 file_writer.set_as_default()
 
@@ -86,14 +93,14 @@ model = tensorflow.keras.Sequential([
 # lr_callback, learning rate, not used in thsi project
 lr_callback = tf.keras.callbacks.LearningRateScheduler(lr_schedule)
 # tensorboard callback
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segment_model_v6/tensorboard",
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segment_model_v7/tensorboard",
                                                     write_graph=True,
                                                     embeddings_freq=5,
                                                     histogram_freq=5,
                                                     embeddings_layer_names=None,
                                                     embeddings_metadata=None)
 # Create a callback that saves the model's weights
-cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v6/weights",
+cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v7/weights",
                                                  save_weights_only=True,
                                                  verbose=1)
 #
@@ -121,7 +128,7 @@ print("accuracy: {:5.2f}%".format(100*acc))
 #
 # saved_format=[tf.h5]
 tf.saved_model.SaveOptions(save_debug_info=False, namespace_whitelist=None, function_aliases=None)
-model.save("saved_model/segment_model_v6",
+model.save("saved_model/segment_model_v7",
                     save_format=tf,
                     overwrite=True,
                     include_optimizer=True)

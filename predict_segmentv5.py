@@ -29,8 +29,8 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[64, 32],
-        optimizer='Adagrad',
+        hidden_units=[64, 32, 8],
+        optimizer='Adam',
         activation_fn=tf.nn.relu,
         dropout=None,
         # The model must choose between 3 classes.
@@ -68,7 +68,7 @@ with tf.device("/device:gpu:0"):
     for pred_dict in predictions:
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
-
+        print(pred_dict)
         print('Prediction is "{}" ({:.1f}%)'.format(
             SPECIES[class_id], 100 * probability))
 #

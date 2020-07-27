@@ -62,14 +62,27 @@ with tf.device("/device:gpu:0"):
     print(dftrain.head())
     print("--dfeval.head() --------------------------------------------------------")
     print(dfeval.head())
-    print("--dftrain_norm.head() --------------------------------------------------")
-    dftrain_norm = dftrain[dftrain.columns[1:4]]
-    print(dftrain_norm)
-    print("--dfeval_norm.head() ----------------------------------------------------")
-    dfeval_norm = dfeval[dfeval.columns[1:4]]
-    print(dfeval_norm.head())
+    #
+    # Select numerical columns which needs to be normalized
+    #
+    dftrain_norm = dftrain[dftrain.columns[0:3]]
+    dfeval_norm = dfeval[dfeval.columns[0:3]]
+    #
+    # Normalize Training Data 
+    #
     std_scale = preprocessing.StandardScaler().fit(dftrain_norm)
     x_dftrain_norm = std_scale.transform(dftrain_norm)
+    #
+    # Converting numpy array to dataframe and update x_train
+    #
+    training_norm_col = pd.DataFrame(x_dftrain_norm, index=dftrain_norm.index, columns=dftrain_norm.columns) 
+    dftrain.update(training_norm_col)
+    #
+    x_test_norm = std_scale.transform(dfeval_norm)
+    testing_norm_col = pd.DataFrame(x_test_norm, index=dfeval_norm.index, columns=dfeval_norm.columns) 
+    dfeval.update(testing_norm_col)
+    #
+
     print("--x_dftrain_norm.head() -------------------------------------------------")
     print(x_dftrain_norm)
     #
@@ -102,7 +115,7 @@ with tf.device("/device:gpu:0"):
     my_feature_columns = []
     for key in dftrain.keys():
         my_feature_columns.append(tf.feature_column.numeric_column(key=key))
-    print("-my_feature_columns ------------------------------------------------------")
+    print("-my_feature_columns ----------------------------------------------------")
     print(my_feature_columns)
     print("------------------------------------------------------------------------")
     #
@@ -110,8 +123,8 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[64, 32],
-        optimizer='Adagrad',
+        hidden_units=[64, 32, 8],
+        optimizer='Adam',
         activation_fn=tf.nn.relu,
         dropout=None,
         # The model must choose between 4 classes. (0-3)
@@ -130,5 +143,6 @@ with tf.device("/device:gpu:0"):
     #
     eval_result = classifier.evaluate(
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
-
+    print(eval_result)
+    
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
