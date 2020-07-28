@@ -41,7 +41,7 @@ y = df.Segment
 print("x: {}", x)
 print("y: {}", y)
 #Split data into train and test 
-x_train, x_test, y_train, y_test = train_test_split(x, y , train_size = 0.7, random_state =  90)
+x_train, x_test, y_train, y_test = train_test_split(x, y , train_size = 0.75, random_state =  90)
 #'''As y variable is multi class categorical variable, hence using softmax as activation function and sparse-categorical cross entropy as loss function.'''
 model = tensorflow.keras.Sequential([
  tensorflow.keras.layers.Dense(64, 
