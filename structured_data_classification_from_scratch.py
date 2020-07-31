@@ -4,6 +4,7 @@ import pandas as pd
 from tensorflow import keras
 from tensorflow.keras import layers
 from tensorflow.keras import models
+from tensorflow.keras.models import Sequential
 
 file_url = "http://storage.googleapis.com/download.tensorflow.org/data/heart.csv"
 dataframe = pd.read_csv(file_url)
@@ -43,11 +44,7 @@ from tensorflow.keras.layers.experimental.preprocessing import Normalization
 from tensorflow.keras.layers.experimental.preprocessing import CategoryEncoding
 from tensorflow.keras.layers.experimental.preprocessing import StringLookup
 
-#from tensorflow.keras.layers.experimental.preprocessing import Normalization
-#from tensorflow.keras.layers.experimental.preprocessing import CategoryEncoding
-#from tensorflow.keras.layers.experimental.preprocessing import StringLookup
-
-
+#
 def encode_numerical_feature(feature, name, dataset):
     # Create a Normalization layer for our feature
     normalizer = Normalization()
@@ -248,4 +245,3 @@ print(
     "This particular patient had a %.1f percent probability "
     "of having a heart disease, as evaluated by our model." % (100 * predictions[0][0],)
 )
-
