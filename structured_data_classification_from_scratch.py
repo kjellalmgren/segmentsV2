@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 from tensorflow import keras
 from tensorflow.keras import layers
+from tensorflow.keras import models
 
 file_url = "http://storage.googleapis.com/download.tensorflow.org/data/heart.csv"
 dataframe = pd.read_csv(file_url)
@@ -105,7 +106,18 @@ def encode_integer_categorical_feature(feature, name, dataset):
     # Apply one-hot encoding to our indices
     encoded_feature = encoder(feature)
     return encoded_feature
-
+#
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segment_model_v8/tensorboard",
+                                                    write_graph=True,
+                                                    embeddings_freq=5,
+                                                    histogram_freq=5,
+                                                    embeddings_layer_names=None,
+                                                    embeddings_metadata=None)
+# Create a callback that saves the model's weights
+cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v8/weights",
+                                                 save_weights_only=True,
+                                                 verbose=1)
+#
 # Categorical features encoded as integers
 sex = keras.Input(shape=(1,), name="sex", dtype="int64")
 cp = keras.Input(shape=(1,), name="cp", dtype="int64")
@@ -182,12 +194,37 @@ x = layers.Dropout(0.5)(x)
 output = layers.Dense(1, activation="sigmoid")(x)
 model = keras.Model(all_inputs, output)
 model.compile("adam", "binary_crossentropy", metrics=["accuracy"])
+#
 
 # `rankdir='LR'` is to make the graph horizontal.
-keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
-
-model.fit(train_ds, epochs=50, validation_data=val_ds)
-
+keras.utils.plot_model(model,
+        show_shapes=True,
+        rankdir="LR")
+model.summary()
+history = model.fit(train_ds,
+        epochs=50,
+        validation_data=val_ds,
+        callbacks=[cp_callback]) # comment out lr_callback)
+print(history.history)
+#
+loss, acc = model.evaluate(train_ds, y=None, 
+                            batch_size=60,
+                            verbose=2)
+print("loss: {}", loss)
+print("accuracy: {:5.2f}%".format(100*acc))                            
+#
+tf.saved_model.SaveOptions(save_debug_info=False,
+                         namespace_whitelist=None,
+                         function_aliases=None)
+model.save("saved_model/segment_model_v8",
+                        save_format="tf",
+                        overwrite=True,
+                        include_optimizer=True)
+#
+# Predict
+#
+# model = models.load_model("saved_model/segment_model_v8")
+#
 sample = {
     "age": 60,
     "sex": 1,
