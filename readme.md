@@ -46,3 +46,20 @@
     $ sudo pip install --user --upgrade tensorflow
     $ sudo pip install --user tensorflow.....whl
     
+## segemnt_training_v5.csv
+
+|Region|Office|Revenue|Segment
+|:-----:|:-----:|-----:|:-----:
+|10|11|645000.0|3
+|10|12|450000.0|2
+|20|21|350000.0|2
+|20|22|245000.0|1
+
+
+|Column|type|s-type
+|:-----|:-----|:-----
+|Region|Integer|Categorical column
+|Office|Integer|Categorical column
+|Revenue|float64|Feature column
+|Segment|Integer|Target (label)
+    

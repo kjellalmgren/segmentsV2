@@ -9,6 +9,7 @@ from tensorflow.keras.models import Sequential
 # Predict
 #
 model = models.load_model("saved_model/segment_model_v8")
+model.get_weights()
 model.summary()
 #
 sample = {
