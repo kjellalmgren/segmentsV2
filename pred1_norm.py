@@ -20,8 +20,8 @@ predict_x = {
        'Revenue': [2195.0, 3500.0, 5210.0, 8948.0, 41114.0],
 }
 
-np.testing.assert_allclose(model.predict(predict_x), model.predict(predict_x))
-#predictions = model.predict(predict_x)
-#print(predictions)
+#np.testing.assert_allclose(model.predict(predict_x), model.predict(predict_x))
+predictions = model.predict(predict_x)
+print(predictions)
 
 model.summary()

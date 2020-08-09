@@ -14,6 +14,9 @@ logdir = "saved_model/segment_model_v6/logs/scalars/" + datetime.now().strftime(
 file_writer = tf.summary.create_file_writer(logdir + "/metrics")
 file_writer.set_as_default()
 
+COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+SPECIES = ['mini', 'micro', 'mellan', 'stor']
+#
 def lr_schedule(epoch):
   """
   Returns a custom learning rate that decreases as epochs progress.
@@ -126,3 +129,30 @@ model.save("saved_model/segment_model_v6",
                     overwrite=True,
                     include_optimizer=True)
 model.summary()
+#
+#############################################################
+# Some error in this section (predictions)
+#############################################################
+def input_fn(features, batch_size=256):
+  # Convert the inputs to a Dataset without labels.
+  return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
+
+features = ['Region', 'Office', 'Revenue']
+class_names = ['mini', 'micro', 'mellan', 'stor']
+
+predict_x = {
+        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
+        'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
+        'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+    }
+    #     
+predictions = model.predict(input_fn=lambda: input_fn(predict_x))
+print("-- Prediction segment ---------------------")
+for pred_dict in predictions:
+  class_id = pred_dict['class_ids'][0]
+  probability = pred_dict['probabilities'][class_id]
+  print(pred_dict)
+  #print('Prediction is "{}" ({:.1f}%)'.format(
+  #    SPECIES[class_id], 100 * probability))
+  print('Prediction is "{}" ({:f}%)'.format(SPECIES[class_id], probability))
+#

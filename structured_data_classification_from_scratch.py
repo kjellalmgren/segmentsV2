@@ -11,6 +11,9 @@ dataframe = pd.read_csv(file_url)
 
 dataframe.shape
 print(tf.__version__)
+#print("Eager execution: {}".format(tf.executing_eagerly()))
+#tf.disable_eager_execution = True
+#print("Eager execution: {}".format(tf.executing_eagerly()))
 
 dataframe.head()
 
@@ -104,15 +107,22 @@ def encode_integer_categorical_feature(feature, name, dataset):
     encoded_feature = encoder(feature)
     return encoded_feature
 #
-tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/segment_model_v8/tensorboard",
+#tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs",
+#                                                    histogram_freq=1)
+
+
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs",
                                                     write_graph=True,
-                                                    embeddings_freq=5,
-                                                    histogram_freq=5,
+                                                    embeddings_freq=1,
+                                                    histogram_freq=1,
                                                     embeddings_layer_names=None,
                                                     embeddings_metadata=None)
+#
 # Create a callback that saves the model's weights
 cp_callback = tf.keras.callbacks.ModelCheckpoint(filepath="saved_model/segment_model_v8/weights",
                                                  save_weights_only=True,
+                                                 mode='auto',
+                                                 save_best_only=True,
                                                  verbose=1)
 #
 # Categorical features encoded as integers
@@ -201,7 +211,10 @@ model.summary()
 history = model.fit(train_ds,
         epochs=50,
         validation_data=val_ds,
-        callbacks=[cp_callback]) # comment out lr_callback)
+        callbacks=[tensorboard_callback])
+#
+#        callbacks=[tensorboard_callback]) # comment out lr_callback)
+#
 print(history.history)
 #
 loss, acc = model.evaluate(train_ds, y=None, 
@@ -213,8 +226,9 @@ print("accuracy: {:5.2f}%".format(100*acc))
 tf.saved_model.SaveOptions(save_debug_info=False,
                          namespace_whitelist=None,
                          function_aliases=None)
+#
 model.save("saved_model/segment_model_v8",
-                        save_format="tf",
+                        save_format='tf',
                         overwrite=True,
                         include_optimizer=True)
 #
