@@ -143,10 +143,11 @@ class_names = ['mini', 'micro', 'mellan', 'stor']
 predict_x = {
         'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
         'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
-        'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+        'Revenue': [250000.0, 1000000.0, 650000.0, 4952520.0, 6000000.0],
     }
-    #     
-predictions = model.predict(input_fn=lambda: input_fn(predict_x))
+#
+predictions = model.predict(predict_x)
+#predictions = model.predict(input_fn=lambda: input_fn(predict_x))
 print("-- Prediction segment ---------------------")
 for pred_dict in predictions:
   class_id = pred_dict['class_ids'][0]

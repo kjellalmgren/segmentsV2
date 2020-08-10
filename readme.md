@@ -45,6 +45,29 @@
     $ sudo pip show tensorflow
     $ sudo pip install --user --upgrade tensorflow
     $ sudo pip install --user tensorflow.....whl
+
+## Training data
+
+|#ofRegions|#ofOffices|#Min|#Max|#of values (v5)
+|:-----:|:-----:|-----:|:-----:|-------:
+|4|8|100 000|10 000 000|20 000
+<br>
+
+|Region|Office|#Revenue min|Revenue max|#of entries
+|:-----|:-----|-----:|:-----:|-------:
+10 SYD|11 Malmö|100 000|10 000 000|20 000
+10 SYD|12 Göteborg|100 000|10 000 000|20 000
+20 ÖST|21 Stockholm|100 000|10 000 000|20 000
+20 ÖST|22 Uppsala|100 000|10 000 000|20 000
+30 VÄST|31 Karlstad|100 000|10 000 000|20 000
+30 VÄST|32 Örebro|100 000|10 000 000|20 000
+40 NORR|41 Luleå|100 000|10 000 000|20 000
+40 NORR|42 Kiruna|100 000|10 000 000|20 000
+
+Distribution for each region/office is:
+
+    distributions := []float64{0.25, 0.50, 0.75, 1.0}
+
     
 ## segemnt_training_v5.csv
 
