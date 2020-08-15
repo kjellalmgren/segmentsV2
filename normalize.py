@@ -6,7 +6,7 @@ import tensorflow as tf
 print("Reading data datasets/segment_training_v5.csv...")
 columns = ['indicies', 'Region', 'Office', 'Revenue', 'Region_normalized', 'Office_normalized', 'Revenue_normalized']
 # columns = ['indicies', 'Region_normalized', 'Office_normalized', 'Revenue_normalized']
-df = pd.read_csv('datasets/segment_training_v5.csv')
+df = pd.read_csv("datasets/segment_training_v5.csv")
 
 # add new column to the dataframe
 #

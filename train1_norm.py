@@ -34,7 +34,7 @@ def lr_schedule(epoch):
 #
 # here we go
 #
-df = pd.read_csv('datasets/segment_training_v5.csv')
+df = pd.read_csv("datasets/segment_training_v5.csv")
 # set revenue as predictor
 x = df[df.columns[:3]]
 y = df.Segment
