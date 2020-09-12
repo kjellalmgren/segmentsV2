@@ -111,12 +111,12 @@ for epoch in range(epochs):
     for data,target in train_loader:
         data,target = data.cuda(), target.cuda()
         data = Variable(data).float().to(device)
-        target = Variable(target).type(torch.FloatTensor)
+        target = Variable(target).type(torch.FloatTensor).cuda()
         optimizer.zero_grad()
         output = model(data).to(device)
         predicted = (torch.round(output.data[0])).to(device)
         total += len(target)
-        correct += (predicted == target).sum()
+        correct += (predicted == target).sum().to(device)
         loss = loss_fn(output, target)
         loss.backward()
         optimizer.step()
@@ -144,15 +144,15 @@ model.eval()
 with torch.no_grad():
     for data, target in test_loader:
         data = Variable(data).float()
-        target = Variable(target).type(torch.FloatTensor)
+        target = Variable(target).type(torch.FloatTensor).cuda()
 
-        output = model(data)
-        loss = loss_fn(output, target)
+        output = model(data).to(device)
+        loss = loss_fn(output, target).cuda()
         valloss += loss.item()*data.size(0)
         
-        predicted = (torch.round(output.data[0]))
+        predicted = (torch.round(output.data[0])).to(device)
         total += len(target)
-        correct += (predicted == target).sum()
+        correct += (predicted == target).sum().to(device)
     
     valloss = valloss/len(test_loader.dataset)
     accuracy = 100 * correct/ float(total)
