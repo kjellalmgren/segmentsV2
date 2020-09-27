@@ -42,7 +42,7 @@ def input_fn1(features, labels, training=True, batch_size=256):
 #
 
 with tf.device("/device:gpu:0"):
-    print("Using nvidia 2070 super GPU")
+    print("Using nvidia 2070 super, 2560 Cuda GPU cores")
     train_path = tf.keras.utils.get_file(
         "segment_training_v4.csv", "http://localhost:8443/segment_training_v4")
     test_path = tf.keras.utils.get_file(

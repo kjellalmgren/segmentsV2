@@ -152,8 +152,8 @@ print("-- Prediction segment ---------------------")
 for pred_dict in predictions:
   class_id = pred_dict['class_ids'][0]
   probability = pred_dict['probabilities'][class_id]
-  print(pred_dict)
-  #print('Prediction is "{}" ({:.1f}%)'.format(
-  #    SPECIES[class_id], 100 * probability))
-  print('Prediction is "{}" ({:f}%)'.format(SPECIES[class_id], probability))
+  #print(pred_dict)
+  print('Prediction is "{}" ({:.1f}%)'.format(
+      SPECIES[class_id], 100 * probability))
+  #print('Prediction is "{}" ({:f}%)'.format(SPECIES[class_id], probability))
 #
