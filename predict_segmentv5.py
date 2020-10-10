@@ -29,8 +29,8 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[64, 32, 8],
-        optimizer='Adam',
+        hidden_units=[200, 20],
+        optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
         # The model must choose between 3 classes.
@@ -39,7 +39,8 @@ with tf.device("/device:gpu:0"):
     #
 
     # ###################################################################
-    def input_fn(features, batch_size=256):
+    # Batch_Size=256
+    def input_fn(features, batch_size=1024):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
@@ -56,10 +57,16 @@ with tf.device("/device:gpu:0"):
     #        if not val.isdigit(): valid = False
     #    predict[feature] = [float(val)]
 
+    ##predict_x = {
+    ##    'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
+    ##    'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
+    ##    'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+    ##}
+
     predict_x = {
         'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
-        'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+        'Office': [11.0, 11.0, 11.0, 11.0, 11.0],
+        'Revenue': [2118256.0, 4822290.0, 8827360.0, 145451.0, 11000000.0],
     }
 
     #     
