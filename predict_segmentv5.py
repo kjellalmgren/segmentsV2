@@ -29,18 +29,18 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[200, 20],
+        hidden_units=[30, 10],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
-        # The model must choose between 3 classes.
+        # The model must choose between 4 classes. 0-3 classes.
         n_classes=4,
         model_dir="saved_model/segment_model_v5")
     #
 
     # ###################################################################
     # Batch_Size=256
-    def input_fn(features, batch_size=1024):
+    def input_fn(features, batch_size=256):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 

@@ -15,7 +15,7 @@ LABELS = ['mini', 'micro', 'mellan', 'stor']
 #
 # train the model
 #
-def make_input_fn(data_df, label_df, num_epochs=5, shuffle=True, batch_size=32):
+def make_input_fn(data_df, label_df, num_epochs=5, shuffle=True, batch_size=256):
     # Inner function, this will be returned
     def input_function():
         # create tf.data.Dataset object with data and its labrl
@@ -33,7 +33,7 @@ print("Eager execution: {}".format(tf.executing_eagerly()))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
 
-def input_fn1(features, labels, training=True, batch_size=256):
+def input_fn1(features, labels, training=True, batch_size=32):
         # Convert the inputs to a Dataset.
         dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
         #tf.keras.backend.set_floatx('float64')
@@ -83,7 +83,6 @@ with tf.device("/device:gpu:0"):
     ####testing_norm_col = pd.DataFrame(x_test_norm, index=dfeval_norm.index, columns=dfeval_norm.columns) 
     ####dfeval.update(testing_norm_col)
     #
-
     ####print("--x_dftrain_norm.head() -------------------------------------------------")
     ####print(x_dftrain_norm)
     #
@@ -114,7 +113,9 @@ with tf.device("/device:gpu:0"):
     # Feature columns describe how to use the input.
     my_feature_columns = []
     for key in dftrain.keys():
+        print("key=" + key)
         my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+    ##my_feature_columns.append(tf.feature_column.numeric_column(key='Revenue'))
     print("-my_feature_columns ----------------------------------------------------")
     print(my_feature_columns)
     print("------------------------------------------------------------------------")
@@ -123,7 +124,7 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[200, 20],
+        hidden_units=[100, 50],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -131,6 +132,7 @@ with tf.device("/device:gpu:0"):
         n_classes=4,
         model_dir="saved_model/segment_model_v5")
 
+    
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
         steps=40000)
