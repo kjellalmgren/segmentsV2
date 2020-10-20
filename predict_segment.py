@@ -39,7 +39,7 @@ with tf.device("/device:gpu:0"):
     #
 
     # ###################################################################
-    def input_fn(features, batch_size=256):
+    def input_fn(features, batch_size=32):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 

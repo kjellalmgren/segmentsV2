@@ -31,7 +31,7 @@ print("Eager execution: {}".format(tf.executing_eagerly()))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
 
-def input_fn1(features, labels, training=True, batch_size=256):
+def input_fn1(features, labels, training=True, batch_size=32):
         # Convert the inputs to a Dataset.
         dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
         #tf.keras.backend.set_floatx('float64')
