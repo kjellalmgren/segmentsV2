@@ -26,7 +26,7 @@ def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32)
 #
 #
 print("Tensorflow version: {}".format(tf.version.VERSION))
-#print("Eager execution: {}".format(tf.executing_eagerly()))
+print("Eager execution: {}".format(tf.executing_eagerly()))
 
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
