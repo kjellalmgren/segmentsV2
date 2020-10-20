@@ -33,7 +33,7 @@ with tf.device("/device:gpu:0"):
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
-        # The model must choose between 3 classes.
+        # The model must choose between 4 classes. 0-3
         n_classes=4,
         model_dir="saved_model/segment_model")
     #
@@ -59,7 +59,7 @@ with tf.device("/device:gpu:0"):
     predict_x = {
         'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
         'Office': [100.0, 100.0, 100.0, 100.0, 100.0],
-        'Revenue': [22195.0, 33500.0, 55210.0, 98948.0, 11114.0],
+        'Revenue': [29195.0, 90500.0, 135010.0, 198948.0, 41114.0],
     }
 
     #     

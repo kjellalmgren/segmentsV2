@@ -13,7 +13,7 @@ LABELS = ['mini', 'micro', 'mellan', 'stor']
 #
 # train the model
 #
-def make_input_fn(data_df, label_df, num_epochs=5, shuffle=True, batch_size=32):
+def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32):
     # Inner function, this will be returned
     def input_function():
         # create tf.data.Dataset object with data and its labrl
