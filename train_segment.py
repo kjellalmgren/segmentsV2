@@ -28,8 +28,8 @@ def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32)
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+print("Num CPUs Available: ", len(tf.config.list_physical_devices('CPU')))
 
 def input_fn1(features, labels, training=True, batch_size=32):
         # Convert the inputs to a Dataset.
@@ -40,8 +40,8 @@ def input_fn1(features, labels, training=True, batch_size=32):
             dataset = dataset.shuffle(10000).repeat()
         return dataset.batch(batch_size)
 #
-
-with tf.device("/device:gpu:0"):
+# with tf.device("/device:GPU:0"):
+with tf.device("/device:GPU:0"):
     print("Using nvidia 2070 super, 2560 Cuda GPU cores")
     train_path = tf.keras.utils.get_file(
         "segment_training_v4.csv", "http://localhost:8443/segment_training_v4")
@@ -107,7 +107,7 @@ with tf.device("/device:gpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=40000)
+        steps=100000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
@@ -119,3 +119,6 @@ with tf.device("/device:gpu:0"):
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
 
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+
+with tf.device("/device:CPU:0"):
+    print("CPU Used....")
