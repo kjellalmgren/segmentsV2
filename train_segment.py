@@ -1,10 +1,11 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+
 import tensorflow as tf
 from tensorflow import keras
 import pandas as pd
 import numpy as np
-import os
-
 import datetime
 
 CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']

@@ -5,6 +5,11 @@
 
     https://www.tensorflow.org/tutorials/keras/save_and_load
 
+## Turn on percicstence on nvidia 2070 super
+    $ sudo nvidia-smi -pm 1
+    $ sudo nvidia-smi -pm 0
+    nvidia-smi -i 0 -q      # stdout of status information
+
 ## Matplotlib for python
 
     $ which matplotlib
