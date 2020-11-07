@@ -108,7 +108,7 @@ with tf.device("/device:GPU:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=100000)
+        steps=300000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():
@@ -120,6 +120,3 @@ with tf.device("/device:GPU:0"):
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
 
     print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
-
-with tf.device("/device:CPU:0"):
-    print("CPU Used....")

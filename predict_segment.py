@@ -31,7 +31,7 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[100, 50],
+        hidden_units=[200, 50],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -61,7 +61,7 @@ with tf.device("/device:gpu:0"):
     predict_x = {
         'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
         'Office': [100.0, 100.0, 100.0, 100.0, 100.0],
-        'Revenue': [29195.0, 70500.0, 145010.0, 198948.0, 41114.0],
+        'Revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0],
     }
 
     #     
