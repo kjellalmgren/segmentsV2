@@ -30,8 +30,8 @@ def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32)
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
+# print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
+# print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
 
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.list_physical_devices('CPU')))
@@ -102,7 +102,7 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[200, 50],
+        hidden_units=[300, 50],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,

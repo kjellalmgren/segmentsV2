@@ -98,7 +98,7 @@ with tf.device("/device:GPU:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[100, 50],
+        hidden_units=[300, 50],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,

@@ -21,7 +21,9 @@ print("==================")
 with tf.device("/device:CPU:0"):
     print("Using CPU")
 with tf.device("/device:GPU:0"):
-    print("Using GPU")
+    print("Using GPU:0")
+with tf.device("/device:GPU:1"):
+    print("Using GPU:1")
 if tf.test.is_built_with_cuda() == True:
     print("Tensorflow is build Using CUDA")
     print("Nvidia CUDA support is present")
