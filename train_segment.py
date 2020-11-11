@@ -8,7 +8,10 @@ import pandas as pd
 import numpy as np
 import datetime
 
+# Define all column in the dataset
+#
 CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+# Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 
 #
@@ -63,6 +66,8 @@ with tf.device("/device:GPU:0"):
     print(dfeval.head())
     #
     # SEGMENTS = dftrain["Segment"].unique()
+    #
+    # Drop target column that should be used for prediction
     y_train = dftrain.pop('Segment')
     y_eval = dfeval.pop('Segment')
     #print(SEGMENTS)
@@ -88,8 +93,12 @@ with tf.device("/device:GPU:0"):
     #
     # Feature columns describe how to use the input.
     my_feature_columns = []
+    # ================ Comment out =======================
     for key in dftrain.keys():
-        my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        #if key in 'Revenue': {
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        #}
+    # ================ Comment out =======================
     print("-my_feature_columns ------------------------------------------------------")
     print(my_feature_columns)
     print("------------------------------------------------------------------------")

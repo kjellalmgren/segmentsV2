@@ -24,8 +24,8 @@ with tf.device("/device:gpu:0"):
     my_feature_columns = []
     for key in COLUMN_NAMES:
         my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+    #
     print(my_feature_columns)
-
     # Build a DNN with 2 hidden layers with 30 and 10 hidden nodes each.
     # This is just to load saved model during training
     classifier = tf.estimator.DNNClassifier(
@@ -59,17 +59,20 @@ with tf.device("/device:gpu:0"):
     #    predict[feature] = [float(val)]
 
     predict_x = {
-        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [100.0, 100.0, 100.0, 100.0, 100.0],
-        'Revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0],
+        'Region': [10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
+        'Office': [100.0, 100.0, 100.0, 100.0, 100.0, 100.0],
+        'Revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0, 1999999.0],
     }
 
     #     
     predictions = classifier.predict(input_fn=lambda: input_fn(predict_x))
     print("-- Prediction segment ---------------------")
     for pred_dict in predictions:
+        # print(pred_dict)
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
+        #region = pred_dict['region'][class_id]
+        #office = pred_dict['office'][class_id]
 
         print('Prediction is "{}" ({:.1f}%)'.format(
             SPECIES[class_id], 100 * probability))
