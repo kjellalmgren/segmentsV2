@@ -247,8 +247,7 @@ layer(type_col)
 but instead use a one-hot encoding of those inputs. Consider raw data that represents a pet's age."""
 
 type_col = train_features['Age']
-category_encoding_layer = get_category_encoding_layer('Age', train_ds,
-                                                      'int64', 5)
+category_encoding_layer = get_category_encoding_layer('Age', train_ds, 'int64', 5)
 category_encoding_layer(type_col)
 
 """## Choose which columns to use
@@ -285,8 +284,7 @@ for header in ['PhotoAmt', 'Fee']:
 
 # Categorical features encoded as integers.
 age_col = tf.keras.Input(shape=(1,), name='Age', dtype='int64')
-encoding_layer = get_category_encoding_layer('Age', train_ds, dtype='int64',
-                                             max_tokens=5)
+encoding_layer = get_category_encoding_layer('Age', train_ds, dtype='int64', max_tokens=5)
 encoded_age_col = encoding_layer(age_col)
 all_inputs.append(age_col)
 encoded_features.append(encoded_age_col)

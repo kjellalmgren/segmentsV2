@@ -44,18 +44,23 @@ Original file is located at
   </td>
 </table>
 
-This tutorial demonstrates how to classify structured data (e.g. tabular data in a CSV). You will use [Keras](https://www.tensorflow.org/guide/keras) to define the model, and [preprocessing layers](https://www.tensorflow.org/guide/keras/preprocessing_layers) as a bridge to map from columns in a CSV to features used to train the model. This tutorial contains complete code to:
+This tutorial demonstrates how to classify structured data (e.g. tabular data in a CSV). You will use [Keras](https://www.tensorflow.org/guide/keras) to define the model,
+and [preprocessing layers](https://www.tensorflow.org/guide/keras/preprocessing_layers) as a bridge to map from columns in a CSV to features used to train the model.
+This tutorial contains complete code to:
 
 * Load a CSV file using [Pandas](https://pandas.pydata.org/).
 * Build an input pipeline to batch and shuffle the rows using [tf.data](https://www.tensorflow.org/guide/datasets).
 * Map from columns in the CSV to features used to train the model using Keras Preprocessing layers.
 * Build, train, and evaluate a model using Keras.
 
-Note: This tutorial is similar to [Classify structured data with feature columns](https://www.tensorflow.org/tutorials/structured_data/feature_columns). This version uses new experimental Keras [Preprocessing Layers](https://www.tensorflow.org/api_docs/python/tf/keras/layers/experimental/preprocessing) instead of `tf.feature_column`. Keras Preprocessing Layers are more intuitive, and can be easily included inside your model to simplify deployment.
+Note: This tutorial is similar to [Classify structured data with feature columns](https://www.tensorflow.org/tutorials/structured_data/feature_columns).
+This version uses new experimental Keras [Preprocessing Layers](https://www.tensorflow.org/api_docs/python/tf/keras/layers/experimental/preprocessing) instead of `tf.feature_column`.
+Keras Preprocessing Layers are more intuitive, and can be easily included inside your model to simplify deployment.
 
 ## The Dataset
 
-You will use a simplified version of the PetFinder [dataset](https://www.kaggle.com/c/petfinder-adoption-prediction). There are several thousand rows in the CSV. Each row describes a pet, and each column describes an attribute. You will use this information to predict if the pet will be adopted.
+You will use a simplified version of the PetFinder [dataset](https://www.kaggle.com/c/petfinder-adoption-prediction).
+There are several thousand rows in the CSV. Each row describes a pet, and each column describes an attribute. You will use this information to predict if the pet will be adopted.
 
 Following is a description of this dataset. Notice there are both numeric and categorical columns. There is a free text column which you will not use in this tutorial.
 
@@ -81,32 +86,43 @@ from tensorflow.keras.layers.experimental import preprocessing
 
 """## Use Pandas to create a dataframe
 
-[Pandas](https://pandas.pydata.org/) is a Python library with many helpful utilities for loading and working with structured data. You will use Pandas to download the dataset from a URL, and load it into a dataframe.
+[Pandas](https://pandas.pydata.org/) is a Python library with many helpful utilities for loading and working with structured data.
+You will use Pandas to download the dataset from a URL, and load it into a dataframe.
 """
 
 import pathlib
 
-dataset_url = 'http://storage.googleapis.com/download.tensorflow.org/data/petfinder-mini.zip'
-csv_file = 'datasets/petfinder-mini/petfinder-mini.csv'
+# Define all column in the dataset
+#
+CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+# Target column to predict
+LABELS = ['mini', 'micro', 'mellan', 'stor']
+SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
-tf.keras.utils.get_file('petfinder_mini.zip', dataset_url,
-                        extract=True, cache_dir='.')
-dataframe = pd.read_csv(csv_file)
+print("Using nvidia 2070 super, 2560 Cuda GPU cores")
+train_path = tf.keras.utils.get_file(
+    "segment_training_v4.csv", "http://localhost:8443/segment_training_v4")
+test_path = tf.keras.utils.get_file(
+    "segment_evaluation_v4.csv", "http://localhost:8443/segment_evaluation_v4")
 
-dataframe.head()
+dataframe = pd.read_csv(train_path, names=CSV_COLUMN_NAMES, header=0)
+print(dataframe.head())
+print(dataframe.dtypes)  
 
 """## Create target variable
 
-The task in the Kaggle competition is to predict the speed at which a pet will be adopted (e.g., in the first week, the first month, the first three months, and so on). Let's simplify this for our tutorial. Here, you will transform this into a binary classification problem, and simply predict whether the pet was adopted, or not.
+The task in the Kaggle competition is to predict the speed at which a pet will be adopted (e.g., in the first week, the first month,
+the first three months, and so on).
+Let's simplify this for our tutorial. Here, you will transform this into a binary classification problem, and simply predict whether the pet was adopted, or not.
 
 After modifying the label column, 0 will indicate the pet was not adopted, and 1 will indicate it was.
 """
 
 # In the original dataset "4" indicates the pet was not adopted.
-dataframe['target'] = np.where(dataframe['AdoptionSpeed']==4, 0, 1)
+dataframe['target'] = dataframe['Segment']
 
 # Drop un-used columns.
-dataframe = dataframe.drop(columns=['AdoptionSpeed', 'Description'])
+dataframe = dataframe.drop(columns=['Segment'])
 
 """## Split the dataframe into train, validation, and test
 
@@ -147,8 +163,9 @@ train_ds = df_to_dataset(train, batch_size=batch_size)
 
 [(train_features, label_batch)] = train_ds.take(1)
 print('Every feature:', list(train_features.keys()))
-print('A batch of ages:', train_features['Age'])
+#print('A batch of ages:', train_features['Age'])
 print('A batch of targets:', label_batch )
+
 
 """You can see that the dataset returns a dictionary of column names (from the dataframe)
 that map to column values from rows in the dataframe.
@@ -185,9 +202,9 @@ def get_normalization_layer(name, dataset):
 
   return normalizer
 
-photo_count_col = train_features['PhotoAmt']
-layer = get_normalization_layer('PhotoAmt', train_ds)
-layer(photo_count_col)
+# revenue_count_col = train_features['Revenue']
+# layer = get_normalization_layer('Revenue', train_ds)
+# layer(revenue_count_col)
 
 """Note: If you many numeric features (hundreds, or more), 
 it is more efficient to concatenate them first and use a single 
@@ -227,18 +244,25 @@ def get_category_encoding_layer(name, dataset, dtype, max_tokens=None):
   # layer so we can use them, or include them in the functional model later.
   return lambda feature: encoder(index(feature))
 
-type_col = train_features['Type']
-layer = get_category_encoding_layer('Type', train_ds, 'string')
-layer(type_col)
-
+############################################################################################################
+#
+# Vilka ska vi sätta get_categorical_encoding layer, vi har ingen type string i nuvarande dataset
+#
+#type_col = train_features['Type']
+#layer = get_category_encoding_layer('Type', train_ds, 'string')
+#layer(type_col)
+#
+############################################################################################################
 """Often, you don't want to feed a number directly into the model, 
 but instead use a one-hot encoding of those inputs. Consider raw data that represents a pet's age."""
 
-type_col = train_features['Age']
-category_encoding_layer = get_category_encoding_layer('Age', train_ds,
-                                                      'int64', 5)
-category_encoding_layer(type_col)
-
+############################################################################################################
+#
+#type_col = train_features['Age']
+#category_encoding_layer = get_category_encoding_layer('Age', train_ds, 'int64', 5)
+#category_encoding_layer(type_col)
+#
+############################################################################################################
 """## Choose which columns to use
 You have seen how to use several types of preprocessing layers. Now you will use them to train a model. 
 You will be using [Keras-functional API](https://www.tensorflow.org/guide/keras/functional) to build the model. 
@@ -264,31 +288,35 @@ all_inputs = []
 encoded_features = []
 
 # Numeric features.
-for header in ['PhotoAmt', 'Fee']:
+for header in ['Region', 'Office', 'Revenue']:
   numeric_col = tf.keras.Input(shape=(1,), name=header)
   normalization_layer = get_normalization_layer(header, train_ds)
   encoded_numeric_col = normalization_layer(numeric_col)
   all_inputs.append(numeric_col)
   encoded_features.append(encoded_numeric_col)
 
-# Categorical features encoded as integers.
-age_col = tf.keras.Input(shape=(1,), name='Age', dtype='int64')
-encoding_layer = get_category_encoding_layer('Age', train_ds, dtype='int64',
-                                             max_tokens=5)
-encoded_age_col = encoding_layer(age_col)
-all_inputs.append(age_col)
-encoded_features.append(encoded_age_col)
+# Categorical features encoded as integers. (Region)
+#region_col = tf.keras.Input(shape=(1,), name='Region', dtype='float64')
+#encoding_layer = get_category_encoding_layer('Region', train_ds, dtype='float64', max_tokens=5)
+#encoded_region_col = encoding_layer(region_col)
+#all_inputs.append(region_col)
+#encoded_features.append(encoded_region_col)
 
-# Categorical features encoded as string.
-categorical_cols = ['Type', 'Color1', 'Color2', 'Gender', 'MaturitySize',
-                    'FurLength', 'Vaccinated', 'Sterilized', 'Health', 'Breed1']
-for header in categorical_cols:
-  categorical_col = tf.keras.Input(shape=(1,), name=header, dtype='string')
-  encoding_layer = get_category_encoding_layer(header, train_ds, dtype='string',
-                                               max_tokens=5)
-  encoded_categorical_col = encoding_layer(categorical_col)
-  all_inputs.append(categorical_col)
-  encoded_features.append(encoded_categorical_col)
+# Categorical features encoded as integers. (Office)
+#office_col = tf.keras.Input(shape=(1,), name='Office', dtype='float64')
+#encoding_layer = get_category_encoding_layer('Office', train_ds, dtype='float64', max_tokens=5)
+#encoded_office_col = encoding_layer(office_col)
+#all_inputs.append(office_col)
+#encoded_features.append(encoded_office_col)
+
+# Categorical features encoded as string. (Om vi hade haft namn på Region och Office hade vi använd denna funktion)
+# categorical_cols = ['Type', 'Color1', 'Color2', 'Gender', 'MaturitySize', 'FurLength', 'Vaccinated', 'Sterilized', 'Health', 'Breed1']
+#for header in categorical_cols:
+#  categorical_col = tf.keras.Input(shape=(1,), name=header, dtype='string')
+#  encoding_layer = get_category_encoding_layer(header, train_ds, dtype='string',max_tokens=5)
+#  encoded_categorical_col = encoding_layer(categorical_col)
+#  all_inputs.append(categorical_col)
+#  encoded_features.append(encoded_categorical_col)
 
 """## Create, compile, and train the model
 
@@ -296,12 +324,12 @@ Now you can create our end-to-end model.
 """
 
 all_features = tf.keras.layers.concatenate(encoded_features)
-x = tf.keras.layers.Dense(32, activation="relu")(all_features)
-x = tf.keras.layers.Dropout(0.5)(x)
+x = tf.keras.layers.Dense(64, activation="relu")(all_features)
+x = tf.keras.layers.Dropout(0.2)(x)
 output = tf.keras.layers.Dense(1)(x)
 model = tf.keras.Model(all_inputs, output)
 model.compile(optimizer='adam',
-              loss=tf.keras.losses.BinaryCrossentropy(from_logits=True),
+              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
 
 """Let's visualize our connectivity graph:"""
@@ -316,6 +344,8 @@ model.fit(train_ds, epochs=10, validation_data=val_ds)
 loss, accuracy = model.evaluate(test_ds)
 print("Accuracy", accuracy)
 
+# exit()
+
 """## Inference on new data
 
 Key point: The model you have developed can now classify a row from a CSV file directly, 
@@ -325,8 +355,8 @@ You can now save and reload the Keras model.
 Follow the tutorial [here](https://www.tensorflow.org/tutorials/keras/save_and_load) for more information on TensorFlow models.
 """
 
-model.save('my_pet_classifier')
-reloaded_model = tf.keras.models.load_model('my_pet_classifier')
+model.save('my_segment_classifier')
+reloaded_model = tf.keras.models.load_model('my_segment_classifier')
 
 """To get a prediction for a new sample, you can simply call `model.predict()`. There are just two things you need to do:
 1.   Wrap scalars into a list so as to have a batch dimension (models only process batches of data, not single samples)
@@ -334,29 +364,39 @@ reloaded_model = tf.keras.models.load_model('my_pet_classifier')
 """
 
 sample = {
-    'Type': 'Cat',
-    'Age': 3,
-    'Breed1': 'Tabby',
-    'Gender': 'Male',
-    'Color1': 'Black',
-    'Color2': 'White',
-    'MaturitySize': 'Small',
-    'FurLength': 'Short',
-    'Vaccinated': 'No',
-    'Sterilized': 'No',
-    'Health': 'Healthy',
-    'Fee': 100,
-    'PhotoAmt': 2,
+    'Region': 10.0,
+    'Office': 100.0,
+    'Revenue': 900000.0,
+}
+
+predict_x = {
+        'Region': [10.0],
+        'Office': [100.0],
+        'Revenue': [1291950.0],
 }
 
 input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
 predictions = reloaded_model.predict(input_dict)
+print(input_dict)
 prob = tf.nn.sigmoid(predictions[0])
 
-print(
-    "This particular pet had a %.1f percent probability "
+def input_fn(features, batch_size=32):
+  # Convert the inputs to a Dataset without labels.
+  return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
+
+#predictions = reloaded_model.predict(input_fn(predict_x)) 
+
+print("This particular pet had a %.1f percent probability "
     "of getting adopted." % (100 * prob)
 )
+
+for pred_dict in predictions:
+  print(pred_dict)
+  # class_id = pred_dict['class_ids'][0]
+  # probability = pred_dict['probabilities'][class_id]
+  
+  #print('Prediction is "{}" ({:.1f}%)'.format(
+  #  SPECIES[class_id], 100 * probability))
 
 """Key point: You will typically see best results with deep learning with larger and more complex datasets.
 When working with a small dataset like this one, we recommend using a decision tree or random forest as a strong baseline.
