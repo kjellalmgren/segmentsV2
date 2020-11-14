@@ -7,5 +7,7 @@ datasets/*.*
 saved_model/
 saved_model/iris_model/*.*
 saved_model/segment_model/*.*
+my_segment_classifier/*
+datasets/petfinder-mini/*.*
 # Dependency directories (remove the comment below to include it)
 # vendor/

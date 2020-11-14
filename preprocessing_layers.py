@@ -67,10 +67,10 @@ Following is a description of this dataset. Notice there are both numeric and ca
 
 Column | Description| Feature Type | Data Type
 ------------|--------------------|----------------------|-----------------
-Region | Region identifier (10, 20, 30, 40) | Categorical | integer
-Office | Office identifier (100, 200, 300, 400) | Categorical | integer
-Revenue | Customer revenue | Classification | float64
-Segment | belong to segment | target | string
+Region | Region identifier (10, 20, 30, 40) | Numerical | integer
+Office | Office identifier (100, 200, 300, 400) | Numerical | integer
+Revenue | Customer revenue | Numerical | float64
+Segment | belong to segment | Classification | string
 
 """
 
@@ -202,9 +202,9 @@ def get_normalization_layer(name, dataset):
 
   return normalizer
 
-# revenue_count_col = train_features['Revenue']
-# layer = get_normalization_layer('Revenue', train_ds)
-# layer(revenue_count_col)
+revenue_count_col = train_features['Revenue']
+layer = get_normalization_layer('Revenue', train_ds)
+layer(revenue_count_col)
 
 """Note: If you many numeric features (hundreds, or more), 
 it is more efficient to concatenate them first and use a single 
@@ -288,7 +288,7 @@ all_inputs = []
 encoded_features = []
 
 # Numeric features.
-for header in ['Region', 'Office', 'Revenue']:
+for header in ['Revenue']:
   numeric_col = tf.keras.Input(shape=(1,), name=header)
   normalization_layer = get_normalization_layer(header, train_ds)
   encoded_numeric_col = normalization_layer(numeric_col)
@@ -296,18 +296,18 @@ for header in ['Region', 'Office', 'Revenue']:
   encoded_features.append(encoded_numeric_col)
 
 # Categorical features encoded as integers. (Region)
-#region_col = tf.keras.Input(shape=(1,), name='Region', dtype='float64')
-#encoding_layer = get_category_encoding_layer('Region', train_ds, dtype='float64', max_tokens=5)
-#encoded_region_col = encoding_layer(region_col)
-#all_inputs.append(region_col)
-#encoded_features.append(encoded_region_col)
+region_col = tf.keras.Input(shape=(1,), name='Region', dtype='int64')
+encoding_layer = get_category_encoding_layer('Region', train_ds, dtype='int64', max_tokens=5)
+encoded_region_col = encoding_layer(region_col)
+all_inputs.append(region_col)
+encoded_features.append(encoded_region_col)
 
 # Categorical features encoded as integers. (Office)
-#office_col = tf.keras.Input(shape=(1,), name='Office', dtype='float64')
-#encoding_layer = get_category_encoding_layer('Office', train_ds, dtype='float64', max_tokens=5)
-#encoded_office_col = encoding_layer(office_col)
-#all_inputs.append(office_col)
-#encoded_features.append(encoded_office_col)
+office_col = tf.keras.Input(shape=(1,), name='Office', dtype='int64')
+encoding_layer = get_category_encoding_layer('Office', train_ds, dtype='int64', max_tokens=5)
+encoded_office_col = encoding_layer(office_col)
+all_inputs.append(office_col)
+encoded_features.append(encoded_office_col)
 
 # Categorical features encoded as string. (Om vi hade haft namn på Region och Office hade vi använd denna funktion)
 # categorical_cols = ['Type', 'Color1', 'Color2', 'Gender', 'MaturitySize', 'FurLength', 'Vaccinated', 'Sterilized', 'Health', 'Breed1']
@@ -322,14 +322,15 @@ for header in ['Region', 'Office', 'Revenue']:
 
 Now you can create our end-to-end model.
 """
+print(encoded_features)
 
 all_features = tf.keras.layers.concatenate(encoded_features)
 x = tf.keras.layers.Dense(64, activation="relu")(all_features)
 x = tf.keras.layers.Dropout(0.2)(x)
-output = tf.keras.layers.Dense(1)(x)
-model = tf.keras.Model(all_inputs, output)
+output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
+model = tf.keras.Model(inputs=all_inputs, outputs=output)
 model.compile(optimizer='adam',
-              loss=tf.keras.losses.CategoricalCrossentropy(from_logits=True),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
 
 """Let's visualize our connectivity graph:"""
@@ -366,16 +367,16 @@ reloaded_model = tf.keras.models.load_model('my_segment_classifier')
 sample = {
     'Region': 10.0,
     'Office': 100.0,
-    'Revenue': 900000.0,
+    'Revenue': 4900000.0,
 }
 
 predict_x = {
         'Region': [10.0],
         'Office': [100.0],
-        'Revenue': [1291950.0],
+        'Revenue': [1500000.0],
 }
 
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in sample.items()}
+input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
 predictions = reloaded_model.predict(input_dict)
 print(input_dict)
 prob = tf.nn.sigmoid(predictions[0])

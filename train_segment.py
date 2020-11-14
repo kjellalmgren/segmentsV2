@@ -7,13 +7,15 @@ from tensorflow import keras
 import pandas as pd
 import numpy as np
 import datetime
-
-# Define all column in the dataset
 #
+#from sklearn.model_selection import train_test_split
+#from tensorflow.keras import layers
+from tensorflow.keras.layers.experimental import preprocessing
+#
+# Define all column in the dataset
 CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
-
 #
 # train the model
 #
@@ -92,12 +94,34 @@ with tf.device("/device:GPU:0"):
     #    feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
     #
     # Feature columns describe how to use the input.
+    def get_normalization_layer(name, dataset):
+        # Create a Normalization layer for our feature.
+        normalizer = preprocessing.Normalization()
+        # Prepare a Dataset that only yields our feature.
+        feature_ds = dataset.map(lambda x, y: x[name])
+        # Learn the statistics of the data.
+        normalizer.adapt(feature_ds)
+        return normalizer
+    #
     my_feature_columns = []
+    #vocabulary = []
     # ================ Comment out =======================
     for key in dftrain.keys():
-        #if key in 'Revenue': {
+        if key in 'Revenue': {
             my_feature_columns.append(tf.feature_column.numeric_column(key=key))
-        #}
+        }
+        if key in 'Region': {
+            #vocabulary = set(dftrain[key].unique())
+            #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
+            #my_feature_columns.append(tf.feature_column.numeric_column(key=key, normalizer_fn=get_normalization_layer(key, dftrain)))
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        }
+        if key in 'Office': {
+            #vocabulary = dftrain[key].unique()
+            #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        }
+    #
     # ================ Comment out =======================
     print("-my_feature_columns ------------------------------------------------------")
     print(my_feature_columns)
