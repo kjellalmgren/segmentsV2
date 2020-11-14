@@ -365,39 +365,49 @@ reloaded_model = tf.keras.models.load_model('my_segment_classifier')
 """
 
 sample = {
-    'Region': 10.0,
-    'Office': 100.0,
+    'Region': 10,
+    'Office': 100,
     'Revenue': 4900000.0,
 }
 
 predict_x = {
-        'Region': [10.0],
-        'Office': [100.0],
-        'Revenue': [1500000.0],
+        'Region': [10],
+        'Office': [100],
+        'Revenue': [395000.0],
 }
 
 input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
 predictions = reloaded_model.predict(input_dict)
+print("--------------------------------------------------------------------")
 print(input_dict)
 prob = tf.nn.sigmoid(predictions[0])
+print(prob)
+
+print("--------------------------------------------------------------------")
 
 def input_fn(features, batch_size=32):
   # Convert the inputs to a Dataset without labels.
   return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-#predictions = reloaded_model.predict(input_fn(predict_x)) 
+#
+i=0
+for pred_dict in prob:
+  probability = pred_dict
+  print('Prediction is "{}" ({:.1f}%)'.format(
+    SPECIES[i], 100 * probability))
+  i += 1
 
-print("This particular pet had a %.1f percent probability "
-    "of getting adopted." % (100 * prob)
-)
+print(prob)
+#predictions = reloaded_model.predict(input_fn(predict_x))
+# print("This particular pet had a %.1f percent probability " "of getting adopted." % (100 * prob))
 
-for pred_dict in predictions:
-  print(pred_dict)
-  # class_id = pred_dict['class_ids'][0]
-  # probability = pred_dict['probabilities'][class_id]
-  
+#i=0
+#for pred_dict in predictions:
+  #print(pred_dict)
+  #probability = pred_dict
   #print('Prediction is "{}" ({:.1f}%)'.format(
-  #  SPECIES[class_id], 100 * probability))
+  #  SPECIES[i], 100 * probability))
+  #i += 1
 
 """Key point: You will typically see best results with deep learning with larger and more complex datasets.
 When working with a small dataset like this one, we recommend using a decision tree or random forest as a strong baseline.
