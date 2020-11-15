@@ -39,7 +39,6 @@ with tf.device("/device:gpu:0"):
         n_classes=4,
         model_dir="saved_model/segment_model")
     #
-
     # ###################################################################
     def input_fn(features, batch_size=32):
         # Convert the inputs to a Dataset without labels.
@@ -48,7 +47,6 @@ with tf.device("/device:gpu:0"):
     features = ['Region', 'Office', 'Revenue']
     class_names = ['mini', 'micro', 'mellan', 'stor']
     #predict = {}
-
     # Manuel console input
     #print("Please type numeric values as prompted.")
     #for feature in features:
@@ -57,13 +55,12 @@ with tf.device("/device:gpu:0"):
     #        val = input(feature + ": ")
     #        if not val.isdigit(): valid = False
     #    predict[feature] = [float(val)]
-
+    #
     predict_x = {
         'Region': [10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
         'Office': [100.0, 100.0, 100.0, 100.0, 100.0, 100.0],
         'Revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0, 1999999.0],
     }
-
     #     
     predictions = classifier.predict(input_fn=lambda: input_fn(predict_x))
     print("-- Prediction segment ---------------------")
@@ -73,7 +70,6 @@ with tf.device("/device:gpu:0"):
         probability = pred_dict['probabilities'][class_id]
         #region = pred_dict['region'][class_id]
         #office = pred_dict['office'][class_id]
-
         print('Prediction is "{}" ({:.1f}%)'.format(
             SPECIES[class_id], 100 * probability))
 #

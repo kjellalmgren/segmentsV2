@@ -333,22 +333,22 @@ model.compile(optimizer='adam',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
 
-"""Let's visualize our connectivity graph:"""
+# Let's visualize our connectivity graph:
 
 # rankdir='LR' is used to make the graph horizontal.
 tf.keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
 
-"""### Train the model"""
+### Train the model
 
-model.fit(train_ds, epochs=10, validation_data=val_ds)
+model.fit(train_ds, epochs=15, validation_data=val_ds)
 
 loss, accuracy = model.evaluate(test_ds)
-print("Accuracy", accuracy)
+print("End training - Accuracy {:3.2f}%".format(100 * accuracy))
 
 # exit()
 
-"""## Inference on new data
-
+## Inference on new data
+"""
 Key point: The model you have developed can now classify a row from a CSV file directly, 
 because the preprocessing code is included inside the model itself.
 
@@ -356,66 +356,4 @@ You can now save and reload the Keras model.
 Follow the tutorial [here](https://www.tensorflow.org/tutorials/keras/save_and_load) for more information on TensorFlow models.
 """
 
-model.save('my_segment_classifier')
-reloaded_model = tf.keras.models.load_model('my_segment_classifier')
-
-"""To get a prediction for a new sample, you can simply call `model.predict()`. There are just two things you need to do:
-1.   Wrap scalars into a list so as to have a batch dimension (models only process batches of data, not single samples)
-2.   Call `convert_to_tensor` on each feature
-"""
-
-sample = {
-    'Region': 10,
-    'Office': 100,
-    'Revenue': 4900000.0,
-}
-
-predict_x = {
-        'Region': [10],
-        'Office': [100],
-        'Revenue': [395000.0],
-}
-
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
-predictions = reloaded_model.predict(input_dict)
-print("--------------------------------------------------------------------")
-print(input_dict)
-prob = tf.nn.sigmoid(predictions[0])
-print(prob)
-
-print("--------------------------------------------------------------------")
-
-def input_fn(features, batch_size=32):
-  # Convert the inputs to a Dataset without labels.
-  return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
-
-#
-i=0
-for pred_dict in prob:
-  probability = pred_dict
-  print('Prediction is "{}" ({:.1f}%)'.format(
-    SPECIES[i], 100 * probability))
-  i += 1
-
-print(prob)
-#predictions = reloaded_model.predict(input_fn(predict_x))
-# print("This particular pet had a %.1f percent probability " "of getting adopted." % (100 * prob))
-
-#i=0
-#for pred_dict in predictions:
-  #print(pred_dict)
-  #probability = pred_dict
-  #print('Prediction is "{}" ({:.1f}%)'.format(
-  #  SPECIES[i], 100 * probability))
-  #i += 1
-
-"""Key point: You will typically see best results with deep learning with larger and more complex datasets.
-When working with a small dataset like this one, we recommend using a decision tree or random forest as a strong baseline.
-The goal of this tutorial is to demonstrate the mechanics of working with structured data, 
-so you have code to use as a starting point when working with your own datasets in the future.
-
-## Next steps
-The best way to learn more about classifying structured data is to try it yourself.
-You may want to find another dataset to work with, and training a model to classify it using code similar to the above.
-To improve accuracy, think carefully about which features to include in your model, and how they should be represented.
-"""
+model.save('saved_model/my_segment_classifier')
