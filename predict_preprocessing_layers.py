@@ -48,7 +48,7 @@ SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 print("Predicition using nvidia 2070 super GPU, 2560 Cuda cores...")
 
-reloaded_model = tf.keras.models.load_model('my_segment_classifier')
+reloaded_model = tf.keras.models.load_model('saved_model/my_segment_classifier')
 
 """To get a prediction for a new sample, you can simply call `model.predict()`. There are just two things you need to do:
 1.   Wrap scalars into a list so as to have a batch dimension (models only process batches of data, not single samples)
