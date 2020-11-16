@@ -57,8 +57,8 @@ reloaded_model = tf.keras.models.load_model('saved_model/my_segment_classifier')
 #
 predict_x = {
         'Region': [10],
-        'Office': [100],
-        'Revenue': [1750000],
+        'Office': [101],
+        'Revenue': [1740000],
 }
 #predict_x = {
 #        'Region': [10, 10],

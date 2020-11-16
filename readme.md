@@ -22,7 +22,7 @@
 
 ## Tensorboard
 
-    $ sudo pip3 install tensorboard
+    $ pip3 install tensorboard
     # show tensorboard, which tensorboard 
     # /home/kjell
     $ mkdir logdir
@@ -35,8 +35,8 @@
 
 ## Profile plugin for tensorboard
 
-    $ sudo pip list
-    $ sudo pip install -U tensorboard-plugin-profile
+    $ pip list | grep tensorb*
+    pip3 install -U tensorboard-plugin-profile
 
 ## Tensorflow uninstall
 

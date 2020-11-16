@@ -98,6 +98,7 @@ CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
+model_name = 'saved_model/my_segment_classifier'
 
 print("Using nvidia 2070 super, 2560 Cuda GPU cores")
 train_path = tf.keras.utils.get_file(
@@ -343,9 +344,6 @@ tf.keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
 model.fit(train_ds, epochs=15, validation_data=val_ds)
 
 loss, accuracy = model.evaluate(test_ds)
-print("End training - Accuracy {:3.2f}%".format(100 * accuracy))
-
-# exit()
 
 ## Inference on new data
 """
@@ -353,7 +351,10 @@ Key point: The model you have developed can now classify a row from a CSV file d
 because the preprocessing code is included inside the model itself.
 
 You can now save and reload the Keras model. 
-Follow the tutorial [here](https://www.tensorflow.org/tutorials/keras/save_and_load) for more information on TensorFlow models.
+Follow the tutorial [here](https://www.tensorflow.org/tutorials/keras/save_and_load) for more information on
+TensorFlow models.
 """
 
-model.save('saved_model/my_segment_classifier')
+model.save(model_name)
+print("End training - loss: {:2.4f} Accuracy {:3.2f}%".format(loss, 100 * accuracy))
+print("Model has been save {}...".format(model_name))
