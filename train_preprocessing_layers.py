@@ -340,7 +340,24 @@ model.compile(optimizer='adam',
 tf.keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
 
 ### Train the model
+#tensorboard_callback = tf.keras.callbacks.TensorBoard(
+#    log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False,
+#    update_freq='epoch', profile_batch=2, embeddings_freq=0,
+#    embeddings_metadata=None
+#)
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/my_segment_classifier",
+                                                    write_graph=True,
+                                                    embeddings_freq=5,
+                                                    histogram_freq=5,
+                                                    embeddings_layer_names=None,
+                                                    embeddings_metadata=None)
 
+# model.fit(train_ds, epochs=15, validation_data=val_ds, callbacks=[tensorboard_callback])
+#
+# Tensorboard libcupti.so.11.0 krävs för att göra tensorboard, med tf_nightly-gpu verkar vara kompilerad för
+# libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
+# Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
+#
 model.fit(train_ds, epochs=15, validation_data=val_ds)
 
 loss, accuracy = model.evaluate(test_ds)
