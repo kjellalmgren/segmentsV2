@@ -9,7 +9,7 @@ import pandas as pd
 import numpy as np
 import datetime
 
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 
 #
@@ -67,8 +67,8 @@ with tf.device("/device:gpu:0"):
     print(dfeval.head())
     #
     # SEGMENTS = dftrain["Segment"].unique()
-    y_train = dftrain.pop('Segment')
-    y_eval = dfeval.pop('Segment')
+    y_train = dftrain.pop('segment')
+    y_eval = dfeval.pop('segment')
     #print(SEGMENTS)
     #print("-- dftrain.head() ------------------------------------------------------")
     #print(dftrain.head())

@@ -13,7 +13,7 @@ import datetime
 from tensorflow.keras.layers.experimental import preprocessing
 #
 # Define all column in the dataset
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 #
@@ -70,8 +70,8 @@ with tf.device("/device:GPU:0"):
     # SEGMENTS = dftrain["Segment"].unique()
     #
     # Drop target column that should be used for prediction
-    y_train = dftrain.pop('Segment')
-    y_eval = dfeval.pop('Segment')
+    y_train = dftrain.pop('segment')
+    y_eval = dfeval.pop('segment')
     #print(SEGMENTS)
     print("-- dftrain.head() ------------------------------------------------------")
     print(dftrain.head())
@@ -107,16 +107,16 @@ with tf.device("/device:GPU:0"):
     #vocabulary = []
     # ================ Comment out =======================
     for key in dftrain.keys():
-        if key in 'Revenue': {
+        if key in 'revenue': {
             my_feature_columns.append(tf.feature_column.numeric_column(key=key))
         }
-        if key in 'Region': {
+        if key in 'region': {
             #vocabulary = set(dftrain[key].unique())
             #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
             #my_feature_columns.append(tf.feature_column.numeric_column(key=key, normalizer_fn=get_normalization_layer(key, dftrain)))
             my_feature_columns.append(tf.feature_column.numeric_column(key=key))
         }
-        if key in 'Office': {
+        if key in 'office': {
             #vocabulary = dftrain[key].unique()
             #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
             my_feature_columns.append(tf.feature_column.numeric_column(key=key))

@@ -14,7 +14,7 @@ logdir = "saved_model/segment_model_v6/logs/scalars/" + datetime.now().strftime(
 file_writer = tf.summary.create_file_writer(logdir + "/metrics")
 file_writer.set_as_default()
 
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 #
 def lr_schedule(epoch):

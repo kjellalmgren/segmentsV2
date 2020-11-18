@@ -6,7 +6,7 @@ from sklearn import preprocessing
 # import tensorflow as tf
 
 # data = [10.0, 11.0, 656000.0]
-columns = ['Region', 'Office', 'Revenue', 'Segment', 'Revenue_normalized']
+columns = ['region', 'office', 'revenue', 'segment', 'revenue_normalized']
 
 series = read_csv('datasets/segment_training_v5.csv', header=0, index_col=0)
 

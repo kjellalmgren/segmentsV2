@@ -44,7 +44,7 @@ with tf.device("/device:gpu:0"):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-    features = ['Region', 'Office', 'Revenue']
+    features = ['region', 'office', 'revenue']
     class_names = ['mini', 'micro', 'mellan', 'stor']
     #predict = {}
     # Manuel console input
@@ -57,9 +57,9 @@ with tf.device("/device:gpu:0"):
     #    predict[feature] = [float(val)]
     #
     predict_x = {
-        'Region': [10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [100.0, 100.0, 100.0, 100.0, 100.0, 100.0],
-        'Revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0, 1999999.0],
+        'region': [10.0, 10.0, 10.0, 10.0, 10.0, 10.0],
+        'office': [100.0, 100.0, 100.0, 100.0, 100.0, 100.0],
+        'revenue': [291950.0, 705000.0, 1450010.0, 1980948.0, 410114.0, 1999999.0],
     }
     #     
     predictions = classifier.predict(input_fn=lambda: input_fn(predict_x))

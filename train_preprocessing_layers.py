@@ -311,7 +311,7 @@ for header in ['revenue']:
 
 # Categorical features encoded as integers. (Region)
 region_col = tf.keras.Input(shape=(1,), name='region', dtype='int64')
-encoding_layer = get_category_encoding_layer('region', train_ds, dtype='int64', max_tokens=5)
+encoding_layer = get_category_encoding_layer('region', train_ds, dtype='int64', max_tokens=4)
 print("****************************")
 print("encoding_layer: {}".format(encoding_layer))
 print("****************************")
@@ -328,7 +328,7 @@ for input in all_inputs:
 
 # Categorical features encoded as integers. (Office)
 office_col = tf.keras.Input(shape=(1,), name='office', dtype='int64')
-encoding_layer = get_category_encoding_layer('office', train_ds, dtype='int64', max_tokens=5)
+encoding_layer = get_category_encoding_layer('office', train_ds, dtype='int64', max_tokens=4)
 encoded_office_col = encoding_layer(office_col)
 all_inputs.append(office_col)
 print("office_col: {}".format(office_col))
