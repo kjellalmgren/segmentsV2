@@ -63,8 +63,8 @@ predict_x = {
         'revenue': [1678000.0],
 }
 predict_x1 = {
-        'region': [10],
-        'office': [100],
+        'region': [20],
+        'office': [200],
         'revenue': [102000.0],
 }
 #predict_x = {
