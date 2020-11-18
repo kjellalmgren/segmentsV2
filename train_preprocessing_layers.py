@@ -240,22 +240,16 @@ def get_category_encoding_layer(name, dataset, dtype, max_tokens=None):
     index = preprocessing.StringLookup(max_tokens=max_tokens)
   else:
     index = preprocessing.IntegerLookup(max_values=max_tokens)
-
   # Prepare a Dataset that only yields our feature
   feature_ds = dataset.map(lambda x, y: x[name])
-
   # Learn the set of possible values and assign them a fixed integer index.
   index.adapt(feature_ds)
-
   # Create a Discretization for our integer indices.
   encoder = preprocessing.CategoryEncoding(max_tokens=index.vocab_size())
-
   # Prepare a Dataset that only yields our feature.
   feature_ds = feature_ds.map(index)
-
   # Learn the space of possible indices.
   encoder.adapt(feature_ds)
-
   # Apply one-hot encoding to our indices. The lambda function captures the
   # layer so we can use them, or include them in the functional model later.
   return lambda feature: encoder(index(feature))
@@ -264,8 +258,8 @@ def get_category_encoding_layer(name, dataset, dtype, max_tokens=None):
 #
 # Vilka ska vi sätta get_categorical_encoding layer, vi har ingen type string i nuvarande dataset
 #
-#type_col = train_features['Region']
-#layer = get_category_encoding_layer('Region', train_ds, 'int64')
+#type_col = train_features['region']
+#layer = get_category_encoding_layer('region', train_ds, 'int64')
 #layer(type_col)
 #print('*********')
 #print(type_col)
@@ -277,8 +271,8 @@ but instead use a one-hot encoding of those inputs. Consider raw data that repre
 
 ############################################################################################################
 #
-#type_col = train_features['Office']
-#category_encoding_layer = get_category_encoding_layer('Office', train_ds, 'int64', 5)
+#type_col = train_features['office']
+#category_encoding_layer = get_category_encoding_layer('office', train_ds, 'int64', 5)
 #category_encoding_layer(type_col)
 #
 ############################################################################################################
@@ -312,23 +306,32 @@ for header in ['revenue']:
   normalization_layer = get_normalization_layer(header, train_ds)
   encoded_revenue_col = normalization_layer(revenue_col)
   all_inputs.append(revenue_col)
-  print("Revenue_col: {}".format(revenue_col))
+  print("revenue_col: {}".format(revenue_col))
   encoded_features.append(encoded_revenue_col)
 
 # Categorical features encoded as integers. (Region)
 region_col = tf.keras.Input(shape=(1,), name='region', dtype='int64')
 encoding_layer = get_category_encoding_layer('region', train_ds, dtype='int64', max_tokens=5)
+print("****************************")
+print("encoding_layer: {}".format(encoding_layer))
+print("****************************")
 encoded_region_col = encoding_layer(region_col)
+print("encoding_region_col: {}".format(encoded_region_col))
 all_inputs.append(region_col)
-print("Region_col: {}".format(region_col))
+print("region_col: {}".format(region_col))
 encoded_features.append(encoded_region_col)
+
+##
+for input in all_inputs:
+  print(input)
+#
 
 # Categorical features encoded as integers. (Office)
 office_col = tf.keras.Input(shape=(1,), name='office', dtype='int64')
 encoding_layer = get_category_encoding_layer('office', train_ds, dtype='int64', max_tokens=5)
 encoded_office_col = encoding_layer(office_col)
 all_inputs.append(office_col)
-print("Office_col: {}".format(office_col))
+print("office_col: {}".format(office_col))
 encoded_features.append(encoded_office_col)
 
 # Categorical features encoded as string. (Om vi hade haft namn på Region och Office hade vi använd denna funktion)
@@ -357,7 +360,7 @@ x = tf.keras.layers.Dropout(0.1)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
 model.compile(optimizer='adam', 
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=["accuracy"])
 model.summary()
 # Let's visualize our connectivity graph:
