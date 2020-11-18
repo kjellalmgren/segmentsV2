@@ -353,10 +353,10 @@ all_features = tf.keras.layers.concatenate(encoded_features)
 x = tf.keras.layers.Dense(512, activation="relu")(all_features)
 x = tf.keras.layers.Dense(256, activation="relu")(x)
 x = tf.keras.layers.Dense(32, activation="relu")(x)
-x = tf.keras.layers.Dropout(0.2)(x)
+x = tf.keras.layers.Dropout(0.1)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
-model.compile(optimizer='adagrad',
+model.compile(optimizer='adam', 
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
 model.summary()
