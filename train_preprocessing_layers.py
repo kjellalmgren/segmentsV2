@@ -94,7 +94,7 @@ import pathlib
 
 # Define all column in the dataset
 #
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
@@ -120,10 +120,10 @@ After modifying the label column, 0 will indicate the pet was not adopted, and 1
 """
 
 # In the original dataset "4" indicates the pet was not adopted.
-dataframe['target'] = dataframe['Segment']
+dataframe['target'] = dataframe['segment']
 
 # Drop un-used columns.
-dataframe = dataframe.drop(columns=['Segment'])
+dataframe = dataframe.drop(columns=['segment'])
 
 """## Split the dataframe into train, validation, and test
 
@@ -135,6 +135,19 @@ train, val = train_test_split(train, test_size=0.2)
 print(len(train), 'train examples')
 print(len(val), 'validation examples')
 print(len(test), 'test examples')
+print('-- Train -------------------')
+print(train.shape)
+print(train.dtypes)
+print(train.head())
+print('-- Val -------------------')
+print(val.shape)
+print(val.dtypes)
+print(val.head())
+print('-- Test -------------------')
+print(test.shape)
+print(test.dtypes)
+print(test.head())
+print('------------------------------')
 
 """## Create an input pipeline using tf.data
 
@@ -161,12 +174,14 @@ You have used a small batch size to keep the output readable."""
 
 batch_size = 5
 train_ds = df_to_dataset(train, batch_size=batch_size)
+print('-- train_ds -------------------')
+
+print(train_ds)
 
 [(train_features, label_batch)] = train_ds.take(1)
 print('Every feature:', list(train_features.keys()))
-#print('A batch of ages:', train_features['Age'])
-print('A batch of targets:', label_batch )
-
+print('A batch of revenue:', train_features['revenue'])
+print('A batch of targets (labels):', label_batch )
 
 """You can see that the dataset returns a dictionary of column names (from the dataframe)
 that map to column values from rows in the dataframe.
@@ -203,9 +218,9 @@ def get_normalization_layer(name, dataset):
 
   return normalizer
 
-revenue_count_col = train_features['Revenue']
-layer = get_normalization_layer('Revenue', train_ds)
-layer(revenue_count_col)
+#revenue_count_col = train_features['Revenue']
+#layer = get_normalization_layer('Revenue', train_ds)
+#layer(revenue_count_col)
 
 """Note: If you many numeric features (hundreds, or more), 
 it is more efficient to concatenate them first and use a single 
@@ -249,9 +264,12 @@ def get_category_encoding_layer(name, dataset, dtype, max_tokens=None):
 #
 # Vilka ska vi sätta get_categorical_encoding layer, vi har ingen type string i nuvarande dataset
 #
-#type_col = train_features['Type']
-#layer = get_category_encoding_layer('Type', train_ds, 'string')
+#type_col = train_features['Region']
+#layer = get_category_encoding_layer('Region', train_ds, 'int64')
 #layer(type_col)
+#print('*********')
+#print(type_col)
+
 #
 ############################################################################################################
 """Often, you don't want to feed a number directly into the model, 
@@ -259,8 +277,8 @@ but instead use a one-hot encoding of those inputs. Consider raw data that repre
 
 ############################################################################################################
 #
-#type_col = train_features['Age']
-#category_encoding_layer = get_category_encoding_layer('Age', train_ds, 'int64', 5)
+#type_col = train_features['Office']
+#category_encoding_layer = get_category_encoding_layer('Office', train_ds, 'int64', 5)
 #category_encoding_layer(type_col)
 #
 ############################################################################################################
@@ -289,25 +307,28 @@ all_inputs = []
 encoded_features = []
 
 # Numeric features.
-for header in ['Revenue']:
-  numeric_col = tf.keras.Input(shape=(1,), name=header)
+for header in ['revenue']:
+  revenue_col = tf.keras.Input(shape=(1,), name=header, dtype='float64')
   normalization_layer = get_normalization_layer(header, train_ds)
-  encoded_numeric_col = normalization_layer(numeric_col)
-  all_inputs.append(numeric_col)
-  encoded_features.append(encoded_numeric_col)
+  encoded_revenue_col = normalization_layer(revenue_col)
+  all_inputs.append(revenue_col)
+  print("Revenue_col: {}".format(revenue_col))
+  encoded_features.append(encoded_revenue_col)
 
 # Categorical features encoded as integers. (Region)
-region_col = tf.keras.Input(shape=(1,), name='Region', dtype='int64')
-encoding_layer = get_category_encoding_layer('Region', train_ds, dtype='int64', max_tokens=5)
+region_col = tf.keras.Input(shape=(1,), name='region', dtype='int64')
+encoding_layer = get_category_encoding_layer('region', train_ds, dtype='int64', max_tokens=5)
 encoded_region_col = encoding_layer(region_col)
 all_inputs.append(region_col)
+print("Region_col: {}".format(region_col))
 encoded_features.append(encoded_region_col)
 
 # Categorical features encoded as integers. (Office)
-office_col = tf.keras.Input(shape=(1,), name='Office', dtype='int64')
-encoding_layer = get_category_encoding_layer('Office', train_ds, dtype='int64', max_tokens=5)
+office_col = tf.keras.Input(shape=(1,), name='office', dtype='int64')
+encoding_layer = get_category_encoding_layer('office', train_ds, dtype='int64', max_tokens=5)
 encoded_office_col = encoding_layer(office_col)
 all_inputs.append(office_col)
+print("Office_col: {}".format(office_col))
 encoded_features.append(encoded_office_col)
 
 # Categorical features encoded as string. (Om vi hade haft namn på Region och Office hade vi använd denna funktion)
@@ -322,18 +343,23 @@ encoded_features.append(encoded_office_col)
 """## Create, compile, and train the model
 
 Now you can create our end-to-end model.
+We have four output classes Dense(4, ....)
 """
+print("encoded_features")
 print(encoded_features)
+print("--------------------------------")
 
 all_features = tf.keras.layers.concatenate(encoded_features)
-x = tf.keras.layers.Dense(64, activation="relu")(all_features)
+x = tf.keras.layers.Dense(512, activation="relu")(all_features)
+x = tf.keras.layers.Dense(256, activation="relu")(x)
+x = tf.keras.layers.Dense(32, activation="relu")(x)
 x = tf.keras.layers.Dropout(0.2)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
-model.compile(optimizer='adam',
+model.compile(optimizer='adagrad',
               loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
-
+model.summary()
 # Let's visualize our connectivity graph:
 
 # rankdir='LR' is used to make the graph horizontal.
@@ -358,8 +384,8 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/
 # libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
 # Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
 #
-model.fit(train_ds, epochs=15, validation_data=val_ds)
-
+model.fit(train_ds, epochs=25, validation_data=val_ds)
+model.summary()
 loss, accuracy = model.evaluate(test_ds)
 
 ## Inference on new data

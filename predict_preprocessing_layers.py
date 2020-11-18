@@ -41,7 +41,7 @@ import tensorflow as tf
 
 # Define all column in the dataset
 #
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+#CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
@@ -49,6 +49,8 @@ SPECIES = ['mini', 'micro', 'mellan', 'stor']
 print("Predicition using nvidia 2070 super GPU, 2560 Cuda cores...")
 
 reloaded_model = tf.keras.models.load_model('saved_model/my_segment_classifier')
+#loss, evaluate = reloaded_model.evaluate()
+#print("Loss, evaluation for model: {}".format(loss, evaluate))
 
 """To get a prediction for a new sample, you can simply call `model.predict()`. There are just two things you need to do:
 1.   Wrap scalars into a list so as to have a batch dimension (models only process batches of data, not single samples)
@@ -56,21 +58,25 @@ reloaded_model = tf.keras.models.load_model('saved_model/my_segment_classifier')
 """
 #
 predict_x = {
-        'Region': [10],
-        'Office': [101],
-        'Revenue': [1740000],
+        'region': [10],
+        'office': [100],
+        'revenue': [1678000.0],
+}
+predict_x1 = {
+        'region': [10],
+        'office': [100],
+        'revenue': [102000.0],
 }
 #predict_x = {
 #        'Region': [10, 10],
 #        'Office': [100, 100],
 #        'Revenue': [395000.0, 1750000],
 #}
-for name, value in predict_x.items():
-    print('name: {} - value: {}'.format(name, value))
-#
+
 # -----------------------------------------------------------------------------------------
 print("------------------------------------------------------------------------------")
 input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
+print('-------------------------------------')
 predictions = reloaded_model.predict(input_dict)
 print("------------------------------------------------------------------------------")
 print(input_dict)
@@ -81,11 +87,14 @@ def input_fn(features, batch_size=32):
   # Convert the inputs to a Dataset without labels.
   return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 #
+print('----------------------------------------')
+print(probabilities)
+print('----------------------------------------')
 i=0
 for pred_dict in probabilities:
   probability = pred_dict
   print('Prediction is "{}" ({:.1f}%)'.format(
-    SPECIES[i], 100 * probability))
+    LABELS[i], 100 * probability))
   i += 1
 #
 #print(probabilities)
