@@ -90,4 +90,10 @@ Distribution for each region/office is:
 |Office|Integer|Categorical column
 |Revenue|float64|Feature column
 |Segment|Integer|Target (label)
-    
+
+
+## Articles
+
+## Demonstration of TensorFlow Feature Columns (tf.feature_column)
+
+https://medium.com/ml-book/demonstration-of-tensorflow-feature-columns-tf-feature-column-3bfcca4ca5c4

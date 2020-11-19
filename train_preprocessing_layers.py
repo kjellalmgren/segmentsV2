@@ -97,7 +97,7 @@ import pathlib
 CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
-SPECIES = ['mini', 'micro', 'mellan', 'stor']
+#
 model_name = 'saved_model/my_segment_classifier'
 
 print("Using nvidia 2070 super, 2560 Cuda GPU cores")
@@ -130,8 +130,8 @@ dataframe = dataframe.drop(columns=['segment'])
 The dataset you downloaded was a single CSV file. You will split this into train, validation, and test sets.
 """
 
-train, test = train_test_split(dataframe, test_size=0.2)
-train, val = train_test_split(train, test_size=0.2)
+train, test = train_test_split(dataframe, test_size=0.3)
+train, val = train_test_split(train, test_size=0.3)
 print(len(train), 'train examples')
 print(len(val), 'validation examples')
 print(len(test), 'test examples')
@@ -209,13 +209,10 @@ feature is 0 and its standard deviation is 1.
 def get_normalization_layer(name, dataset):
   # Create a Normalization layer for our feature.
   normalizer = preprocessing.Normalization()
-
   # Prepare a Dataset that only yields our feature.
   feature_ds = dataset.map(lambda x, y: x[name])
-
   # Learn the statistics of the data.
   normalizer.adapt(feature_ds)
-
   return normalizer
 
 #revenue_count_col = train_features['Revenue']
@@ -353,14 +350,13 @@ print(encoded_features)
 print("--------------------------------")
 
 all_features = tf.keras.layers.concatenate(encoded_features)
-x = tf.keras.layers.Dense(512, activation="relu")(all_features)
-x = tf.keras.layers.Dense(256, activation="relu")(x)
-x = tf.keras.layers.Dense(32, activation="relu")(x)
+x = tf.keras.layers.Dense(100, activation="relu")(all_features)
+x = tf.keras.layers.Dense(30, activation="relu")(x)
 x = tf.keras.layers.Dropout(0.1)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
 model.compile(optimizer='adam', 
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
               metrics=["accuracy"])
 model.summary()
 # Let's visualize our connectivity graph:
@@ -402,5 +398,5 @@ TensorFlow models.
 """
 
 model.save(model_name)
-print("End training - loss: {:2.4f} Accuracy {:3.2f}%".format(loss, 100 * accuracy))
+print("End training - loss: {:3.4f} Accuracy {:3.2f}%".format(loss * 100, 100 * accuracy))
 print("Model has been save {}...".format(model_name))

@@ -44,7 +44,6 @@ import tensorflow as tf
 #CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 # Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
-SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 print("Predicition using nvidia 2070 super GPU, 2560 Cuda cores...")
 
@@ -73,7 +72,7 @@ predict_x1 = {
 #        'revenue': [395000.0, 1750000],
 #}
 
-# -----------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------
 print("------------------------------------------------------------------------------")
 input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
 print('-------------------------------------')

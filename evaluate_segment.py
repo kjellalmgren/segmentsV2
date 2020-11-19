@@ -8,6 +8,7 @@ from tensorflow import keras
 import pandas as pd
 import numpy as np
 import datetime
+import json
 
 CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 LABELS = ['mini', 'micro', 'mellan', 'stor']
@@ -61,10 +62,10 @@ with tf.device("/device:gpu:0"):
     #print(dftrain.dtypes)
     #print("------------------------------------------------------------------------")
     #
-    print("--dftrain.head() -------------------------------------------------------")
-    print(dftrain.head())
-    print("--dfeval.head() --------------------------------------------------------")
-    print(dfeval.head())
+    #print("--dftrain.head() -------------------------------------------------------")
+    #print(dftrain.head())
+    #print("--dfeval.head() --------------------------------------------------------")
+    #print(dfeval.head())
     #
     # SEGMENTS = dftrain["Segment"].unique()
     y_train = dftrain.pop('segment')
@@ -72,11 +73,11 @@ with tf.device("/device:gpu:0"):
     #print(SEGMENTS)
     #print("-- dftrain.head() ------------------------------------------------------")
     #print(dftrain.head())
-    print("-- dfeval.head() -------------------------------------------------------")
-    print(dfeval.head())
+    #print("-- dfeval.head() -------------------------------------------------------")
+    #print(dfeval.head())
     #print("-y_train format --------------------------------------------------------")
     #print("{}".format(y_train))
-    print("------------------------------------------------------------------------")
+    #print("------------------------------------------------------------------------")
     #
     #CATEGORICAL_COLUMNS = ['Region', 'Office']
     #NUMERIC_COLUMNS = ['Revenue']
@@ -94,8 +95,8 @@ with tf.device("/device:gpu:0"):
     my_feature_columns = []
     for key in dftrain.keys():
         my_feature_columns.append(tf.feature_column.numeric_column(key=key))
-    print("-my_feature_columns ------------------------------------------------------")
-    print(my_feature_columns)
+    #print("-my_feature_columns ------------------------------------------------------")
+    #print(my_feature_columns)
     #print("------------------------------------------------------------------------")
     #   
      # Build a DNN with 2 hidden layers with 30 and 10 hidden nodes each.
@@ -119,4 +120,6 @@ with tf.device("/device:gpu:0"):
     eval_result = classifier.evaluate(
         input_fn=lambda: input_fn1(dfeval, y_eval, training=False))
 
-    print('\nTest set accuracy: {accuracy:0.3f}\n'.format(**eval_result))
+    data = eval_result
+    print(data)
+    print('\nTest set accuracy: {:3.2f}% loss: {:3.4f}%\n'.format(data['accuracy']*100, data['loss']*100))

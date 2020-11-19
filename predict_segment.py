@@ -12,7 +12,7 @@ import datetime
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 with tf.device("/device:gpu:0"):
