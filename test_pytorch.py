@@ -73,7 +73,7 @@ print(x1.head(5))
 #
 # y is the eight's column, label for each row in the dataset (segment)
 #
-y1 = df.Segment
+y1 = df.segment
 print("y1: ", y1)
 #
 #Split data into train and test 
@@ -153,10 +153,13 @@ print(model)
 # torch.Tensor(np.array(df))
 # x_train = torch.from_numpy(torch.Tensor(np.array(x_train))).cuda()
 x_train = df.select_dtypes(include=float).to_numpy()
+print(x_train.shape)
+
 # x_train = x_train.cuda()
 #y_train = torch.from_numpy(df_to_tensor(y_train)).view(-1,1)
 ##y_train = torch.from_numpy(torch.Tensor(np.array(y_train))).view(-1,1)
 y_train = df.select_dtypes(include=float).to_numpy()
+print(y_train.shape)
 #y_train = y_train.view(-1,1)
 #y_train = y_train.cuda()
 np.set_printoptions(suppress=True)
@@ -173,8 +176,8 @@ y_test = df.select_dtypes(include=float).to_numpy()
 #
 # Block
 #
-train = torch.utils.data.TensorDataset(x_train,y_train)
-test = torch.utils.data.TensorDataset(x_test,y_test)
+train = torch.utils.data.TensorDataset(x_train, y_train)
+test = torch.utils.data.TensorDataset(x_test, y_test)
 
 train_loader = torch.utils.data.DataLoader(train, batch_size = 64, shuffle = True)
 test_loader = torch.utils.data.DataLoader(test, batch_size = 64, shuffle = True)
