@@ -203,10 +203,9 @@ model.train() # prepare model for training
 for epoch in range(epochs):
     trainloss = 0.0
     valloss = 0.0
-    
     correct = 0
     total = 0
-    for data,target in train_loader:
+    for data,target, a2 in train_loader:
         data,target = data.cuda(), target.cuda()
         data = Variable(data).float().to(device)
         target = Variable(target).type(torch.FloatTensor).cuda()
