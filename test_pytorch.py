@@ -195,7 +195,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, weight_decay= 1e-6, momentum
 
 # lines 1 to 6
 #epochs = 2000
-epochs = 2     # default 100
+epochs = 4     # default 100
 epoch_list = []
 train_loss_list = []
 val_loss_list = []
@@ -258,4 +258,4 @@ with torch.no_grad():
     
     valloss = valloss/len(test_loader.dataset)
     accuracy = 100 * correct/ float(total)
-    print("Accuracy: {}".format(accuracy))
+    print("Accuracy: {:.2f}".format(accuracy))

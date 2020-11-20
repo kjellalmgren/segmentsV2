@@ -263,4 +263,4 @@ with torch.no_grad():
     
     valloss = valloss/len(test_loader.dataset)
     accuracy = 100 * correct/ float(total)
-    print("Accuracy: {}".format(accuracy))
+    print("Accuracy: {:.2f}".format(accuracy))
