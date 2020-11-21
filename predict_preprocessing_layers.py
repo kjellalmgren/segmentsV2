@@ -74,7 +74,7 @@ predict_x1 = {
 
 # ------------------------------------------------------------------------------------
 print("------------------------------------------------------------------------------")
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
+input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x1.items()}
 print('-------------------------------------')
 predictions = reloaded_model.predict(input_dict)
 print("------------------------------------------------------------------------------")

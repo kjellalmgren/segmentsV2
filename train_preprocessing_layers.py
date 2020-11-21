@@ -350,8 +350,10 @@ print(encoded_features)
 print("--------------------------------")
 
 all_features = tf.keras.layers.concatenate(encoded_features)
-x = tf.keras.layers.Dense(100, activation="relu")(all_features)
-x = tf.keras.layers.Dense(30, activation="relu")(x)
+x = tf.keras.layers.Dense(512, activation="relu")(all_features)
+x = tf.keras.layers.Dense(256, activation="relu")(x)
+x = tf.keras.layers.Dense(128, activation="relu")(x)
+x = tf.keras.layers.Dense(10, activation="relu")(x)
 x = tf.keras.layers.Dropout(0.1)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
@@ -383,7 +385,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/
 # libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
 # Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
 #
-model.fit(train_ds, epochs=25, validation_data=val_ds)
+model.fit(train_ds, epochs=500, validation_data=val_ds)
 model.summary()
 loss, accuracy = model.evaluate(test_ds)
 

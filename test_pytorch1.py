@@ -200,7 +200,7 @@ optimizer = optim.SGD(model.parameters(), lr=0.001, weight_decay= 1e-6, momentum
 
 # lines 1 to 6
 #epochs = 2000
-epochs = 3     # default 100
+epochs = 20     # default 100
 epoch_list = []
 train_loss_list = []
 val_loss_list = []
