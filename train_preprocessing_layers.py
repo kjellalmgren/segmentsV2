@@ -305,7 +305,7 @@ for header in ['revenue']:
   all_inputs.append(revenue_col)
   print("revenue_col: {}".format(revenue_col))
   encoded_features.append(encoded_revenue_col)
-
+#
 # Categorical features encoded as integers. (Region)
 region_col = tf.keras.Input(shape=(1,), name='region', dtype='int64')
 encoding_layer = get_category_encoding_layer('region', train_ds, dtype='int64', max_tokens=4)
@@ -319,6 +319,7 @@ print("region_col: {}".format(region_col))
 encoded_features.append(encoded_region_col)
 
 ##
+print("All_Inputs...")
 for input in all_inputs:
   print(input)
 #
@@ -345,7 +346,7 @@ encoded_features.append(encoded_office_col)
 Now you can create our end-to-end model.
 We have four output classes Dense(4, ....)
 """
-print("encoded_features")
+print("encoded_features...")
 print(encoded_features)
 print("--------------------------------")
 
@@ -385,7 +386,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/
 # libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
 # Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
 #
-model.fit(train_ds, epochs=500, validation_data=val_ds)
+model.fit(train_ds, epochs=25, validation_data=val_ds)
 model.summary()
 loss, accuracy = model.evaluate(test_ds)
 

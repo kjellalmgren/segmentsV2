@@ -58,12 +58,12 @@ reloaded_model = tf.keras.models.load_model('saved_model/my_segment_classifier')
 #
 predict_x = {
         'region': [10],
-        'office': [100],
-        'revenue': [1678000.0],
+        'office': [11],
+        'revenue': [11678000.0],
 }
 predict_x1 = {
         'region': [20],
-        'office': [200],
+        'office': [21],
         'revenue': [102000.0],
 }
 #predict_x = {
@@ -74,7 +74,7 @@ predict_x1 = {
 
 # ------------------------------------------------------------------------------------
 print("------------------------------------------------------------------------------")
-input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x1.items()}
+input_dict = {name: tf.convert_to_tensor([value]) for name, value in predict_x.items()}
 print('-------------------------------------')
 predictions = reloaded_model.predict(input_dict)
 print("------------------------------------------------------------------------------")

@@ -9,7 +9,7 @@ from sklearn import preprocessing
 
 import datetime
 
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
 LABELS = ['mini', 'micro', 'mellan', 'stor']
 
 #

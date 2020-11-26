@@ -10,7 +10,7 @@ import datetime
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 with tf.device("/device:gpu:0"):
@@ -44,7 +44,7 @@ with tf.device("/device:gpu:0"):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-    features = ['Region', 'Office', 'Revenue']
+    features = ['region', 'office', 'revenue']
     class_names = ['mini', 'micro', 'mellan', 'stor']
     #predict = {}
 
@@ -64,9 +64,9 @@ with tf.device("/device:gpu:0"):
     ##}
 
     predict_x = {
-        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [11.0, 11.0, 11.0, 11.0, 11.0],
-        'Revenue': [2118256.0, 4822290.0, 8827360.0, 145451.0, 11000000.0],
+        'region': [10.0, 10.0, 10.0, 10.0, 10.0],
+        'office': [11.0, 11.0, 11.0, 11.0, 11.0],
+        'revenue': [2118256.0, 4822290.0, 8827360.0, 145451.0, 11000000.0],
     }
 
     #     
