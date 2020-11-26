@@ -255,11 +255,11 @@ def get_category_encoding_layer(name, dataset, dtype, max_tokens=None):
 #
 # Vilka ska vi sätta get_categorical_encoding layer, vi har ingen type string i nuvarande dataset
 #
-#type_col = train_features['region']
-#layer = get_category_encoding_layer('region', train_ds, 'int64')
-#layer(type_col)
-#print('*********')
-#print(type_col)
+type_col = train_features['region']
+layer = get_category_encoding_layer('region', train_ds, 'int64', 5)
+layer(type_col)
+print('*********')
+print("Type_col (region): {}".format(type_col))
 
 #
 ############################################################################################################
@@ -268,9 +268,11 @@ but instead use a one-hot encoding of those inputs. Consider raw data that repre
 
 ############################################################################################################
 #
-#type_col = train_features['office']
-#category_encoding_layer = get_category_encoding_layer('office', train_ds, 'int64', 5)
-#category_encoding_layer(type_col)
+type_col = train_features['office']
+category_encoding_layer = get_category_encoding_layer('office', train_ds, 'int64', 6)
+category_encoding_layer(type_col)
+print('*********')
+print("Type_col (office): {}".format(type_col))
 #
 ############################################################################################################
 """## Choose which columns to use
@@ -359,7 +361,7 @@ x = tf.keras.layers.Dropout(0.1)(x)
 output = tf.keras.layers.Dense(4, activation="softmax", name="predictions")(x)
 model = tf.keras.Model(inputs=all_inputs, outputs=output)
 model.compile(optimizer='adam', 
-              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+              loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=False),
               metrics=["accuracy"])
 model.summary()
 # Let's visualize our connectivity graph:
@@ -386,7 +388,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/
 # libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
 # Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
 #
-model.fit(train_ds, epochs=25, validation_data=val_ds)
+model.fit(train_ds, epochs=10, validation_data=val_ds)
 model.summary()
 loss, accuracy = model.evaluate(test_ds)
 

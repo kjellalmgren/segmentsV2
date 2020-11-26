@@ -1,12 +1,18 @@
 
-import os
+import os, sys
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
 
 import tensorflow as tf
 import tensorflow_estimator as te
-print(tf.__version__)
-print(te.__file__)
+import tensorflow.keras as k
+import pandas as pd
+
+print("Tensorflow version: {}".format(tf.__version__))
+print("Tensorflow estimator file: {}".format(te.__file__))
+print("Tensorflow keras: {}".format(tf.keras.__version__))
 print("Eager execution: {}".format(tf.executing_eagerly()))
+print("Pandas version: {}".format(pd.__version__))
+print("Python version: {}".format(sys.version))
 print("----------")
 print(tf.config.list_physical_devices())
 print("**********")

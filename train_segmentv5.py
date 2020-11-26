@@ -87,8 +87,8 @@ with tf.device("/device:gpu:0"):
     ####print(x_dftrain_norm)
     #
     # SEGMENTS = dftrain["Segment"].unique()
-    y_train = dftrain.pop('Segment')
-    y_eval = dfeval.pop('Segment')
+    y_train = dftrain.pop('segment')
+    y_eval = dfeval.pop('segment')
     #print(SEGMENTS)
     print("-- dftrain.head() ------------------------------------------------------")
     print(dftrain.head())
