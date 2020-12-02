@@ -122,4 +122,4 @@ with tf.device("/device:gpu:0"):
 
     data = eval_result
     print(data)
-    print('\nTest set accuracy: {:3.2f}% loss: {:3.4f}%\n'.format(data['accuracy']*100, data['loss']*100))
+    print('\nTest set accuracy: {:3.2f}% loss: {:3.6f}%\n'.format(data['accuracy']*100, data['loss']))
