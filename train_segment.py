@@ -30,7 +30,6 @@ def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32)
         return ds # return batch of the dataset
     return input_function # return a function object of use
 #
-#
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 
