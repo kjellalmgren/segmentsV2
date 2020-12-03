@@ -1,7 +1,8 @@
 
 import os, sys
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-
+import torch
+import torchvision
 import tensorflow as tf
 import tensorflow_estimator as te
 import tensorflow.keras as k
@@ -13,6 +14,8 @@ print("Tensorflow keras: {}".format(tf.keras.__version__))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 print("Pandas version: {}".format(pd.__version__))
 print("Python version: {}".format(sys.version))
+print("Torch: {}".format(torch.__version__))
+print("Torchvision: {}".format(torchvision.__version__))
 print("----------")
 print(tf.config.list_physical_devices())
 print("**********")
