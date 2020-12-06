@@ -371,7 +371,7 @@ tf.keras.utils.plot_model(model, show_shapes=True, rankdir="LR")
 
 ### Train the model
 #tensorboard_callback = tf.keras.callbacks.TensorBoard(
-#    log_dir='./logs', histogram_freq=0, write_graph=True, write_images=False,
+#    log_dir='saved_model/logs/my_segment_classifier', histogram_freq=0, write_graph=True, write_images=False,
 #    update_freq='epoch', profile_batch=2, embeddings_freq=0,
 #    embeddings_metadata=None
 #)
@@ -404,4 +404,4 @@ TensorFlow models.
 
 model.save(model_name)
 print("End training - loss: {:3.4f} Accuracy {:3.2f}%".format(loss * 100, 100 * accuracy))
-print("Model has been save {}...".format(model_name))
+print("Model has been saved as {}...".format(model_name))
