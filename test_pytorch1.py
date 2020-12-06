@@ -157,14 +157,14 @@ print(model)
 #
 # denna del har förändrats, vi behöver se över x_train, y_train
 # vi ska prova med att plocka bort region, office samt revenue och bara behålla normalized columns
-# torch.Tensor(np.array(df))
-# x_train = torch.from_numpy(torch.Tensor(np.array(x_train))).cuda()
+torch.Tensor(np.array(df))
+#x_train = torch.from_numpy(torch.Tensor(np.array(x_train)))
 x_train = df.select_dtypes(include=float).to_numpy()
 print(x_train.shape)
 
 # x_train = x_train.cuda()
 #y_train = torch.from_numpy(df_to_tensor(y_train)).view(-1,1)
-##y_train = torch.from_numpy(torch.Tensor(np.array(y_train))).view(-1,1)
+#y_train = torch.from_numpy(torch.Tensor(np.array(y_train))).view(-1,1)
 y_train = df.select_dtypes(include=float).to_numpy()
 print(y_train.shape)
 #y_train = y_train.view(-1,1)

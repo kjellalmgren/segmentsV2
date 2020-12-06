@@ -152,13 +152,13 @@ print(model)
 # vi ska prova med att plocka bort region, office samt revenue och bara behålla normalized columns
 # torch.Tensor(np.array(df))
 # x_train = torch.from_numpy(torch.Tensor(np.array(x_train))).cuda()
-x_train = df.select_dtypes(include=float).to_numpy()
+x_train = df.select_dtypes(include=float).numpy()
 print(x_train.shape)
 
 # x_train = x_train.cuda()
 #y_train = torch.from_numpy(df_to_tensor(y_train)).view(-1,1)
 ##y_train = torch.from_numpy(torch.Tensor(np.array(y_train))).view(-1,1)
-y_train = df.select_dtypes(include=float).to_numpy()
+y_train = df.select_dtypes(include=float).numpy()
 print(y_train.shape)
 #y_train = y_train.view(-1,1)
 #y_train = y_train.cuda()
@@ -168,10 +168,10 @@ print(x_train[:10])
 print("----------")
 #
 #x_test = torch.from_numpy(df_to_tensor(x_test))
-x_test = df.select_dtypes(include=float).to_numpy()
+x_test = df.select_dtypes(include=float).numpy()
 #x_test = x_test.cuda()
 #y_test = torch.from_numpy(df_to_tensor(y_test)).view(-1,1)
-y_test = df.select_dtypes(include=float).to_numpy()
+y_test = df.select_dtypes(include=float).numpy()
 #y_test = y_test.cuda()
 #
 # Block
