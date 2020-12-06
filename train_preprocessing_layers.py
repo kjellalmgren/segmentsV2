@@ -388,7 +388,7 @@ tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir="saved_model/logs/
 # libcupti.so.11.0 och inte libcupti.so.11,1 som kommer med tensorflow build.
 # Kan även vara att tensorboard-plugin-profile endast finns i version 2.3.0
 #
-model.fit(train_ds, epochs=10, validation_data=val_ds)
+model.fit(train_ds, epochs=30, validation_data=val_ds)
 model.summary()
 loss, accuracy = model.evaluate(test_ds)
 
