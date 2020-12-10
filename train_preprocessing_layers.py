@@ -85,7 +85,6 @@ from tensorflow.keras import layers
 from tensorflow.keras.layers.experimental import preprocessing
 
 """## Use Pandas to create a dataframe
-
 [Pandas](https://pandas.pydata.org/) is a Python library with many helpful utilities for loading and working with structured data.
 You will use Pandas to download the dataset from a URL, and load it into a dataframe.
 """
