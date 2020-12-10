@@ -1,5 +1,6 @@
 # 
 import numpy as np 
+import collections as c
 
 np.random.seed(0)
 
@@ -16,7 +17,7 @@ class Layer_Dense:
 
 layer1 = Layer_Dense(4,5)
 layer2 = Layer_Dense(5,2)
-
+# print("Count: {}".format(c.Counter(X)))
 layer1.forward(X)
 # print(layer1.output)
 layer2.forward(layer1.output)
