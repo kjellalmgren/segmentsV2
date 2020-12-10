@@ -7,6 +7,9 @@ datasets/*.*
 saved_model/
 saved_model/iris_model/*.*
 saved_model/segment_model/*.*
+my_segment_classifier/*
+datasets/petfinder-mini/*.*
+datasets/segment_training_v4.csv
 # Dependency directories (remove the comment below to include it)
 # vendor/
 .vscode/

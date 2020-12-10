@@ -14,7 +14,7 @@ logdir = "saved_model/segment_model_v6/logs/scalars/" + datetime.now().strftime(
 file_writer = tf.summary.create_file_writer(logdir + "/metrics")
 file_writer.set_as_default()
 
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 #
 def lr_schedule(epoch):
@@ -34,7 +34,7 @@ def lr_schedule(epoch):
 #
 # here we go
 #
-df = pd.read_csv('datasets/segment_training_v5.csv')
+df = pd.read_csv("datasets/segment_training_v5.csv")
 # set revenue as predictor
 x = df[df.columns[:3]]
 y = df.Segment
@@ -152,8 +152,8 @@ print("-- Prediction segment ---------------------")
 for pred_dict in predictions:
   class_id = pred_dict['class_ids'][0]
   probability = pred_dict['probabilities'][class_id]
-  print(pred_dict)
-  #print('Prediction is "{}" ({:.1f}%)'.format(
-  #    SPECIES[class_id], 100 * probability))
-  print('Prediction is "{}" ({:f}%)'.format(SPECIES[class_id], probability))
+  #print(pred_dict)
+  print('Prediction is "{}" ({:.1f}%)'.format(
+      SPECIES[class_id], 100 * probability))
+  #print('Prediction is "{}" ({:f}%)'.format(SPECIES[class_id], probability))
 #

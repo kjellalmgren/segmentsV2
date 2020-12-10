@@ -11,7 +11,7 @@ import datetime
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 with tf.device("/device:gpu:0"):
@@ -44,7 +44,7 @@ with tf.device("/device:gpu:0"):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-    features = ['Region', 'Office', 'Revenue']
+    features = ['region', 'office', 'revenue']
     class_names = ['mini', 'micro', 'mellan', 'stor']
     #predict = {}
 
@@ -58,9 +58,9 @@ with tf.device("/device:gpu:0"):
     #    predict[feature] = [float(val)]
 
     predict_x = {
-        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
-        'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+        'region': [10.0, 10.0, 10.0, 10.0, 10.0],
+        'office': [11.0, 12.0, 11.0, 12.0, 11.0],
+        'revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
     }
     #     
     predictions = classifier.predict(input_fn=lambda: input_fn(predict_x))

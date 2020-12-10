@@ -4,16 +4,16 @@ from sklearn.model_selection import train_test_split
 import tensorflow as tf
 
 print("Reading data datasets/segment_training_v5.csv...")
-columns = ['indicies', 'Region', 'Office', 'Revenue', 'Region_normalized', 'Office_normalized', 'Revenue_normalized']
+columns = ['indicies', 'region', 'office', 'revenue', 'region_normalized', 'office_normalized', 'revenue_normalized']
 # columns = ['indicies', 'Region_normalized', 'Office_normalized', 'Revenue_normalized']
-df = pd.read_csv('datasets/segment_training_v5.csv')
+df = pd.read_csv("datasets/segment_training_v5.csv")
 
 # add new column to the dataframe
 #
 print("Creating column to be used for normalizing...")
-df.insert(3, "Region_normalized", 0.0)
-df.insert(4, "Office_normalized", 0.0)
-df.insert(5, "Revenue_normalized", 0.0)
+df.insert(3, "region_normalized", 0.0)
+df.insert(4, "office_normalized", 0.0)
+df.insert(5, "revenue_normalized", 0.0)
 #
 #print(df.columns)
 #print(type('Revenue_normalized'))
@@ -22,9 +22,9 @@ df.insert(5, "Revenue_normalized", 0.0)
 #
 print("Adding values to normalized columns...")
 for i in df.index:
-    df.at[i, 'Region_normalized'] = df.at[i, 'Region']
-    df.at[i, 'Office_normalized'] = df.at[i, 'Office']
-    df.at[i, 'Revenue_normalized'] = df.at[i, 'Revenue']
+    df.at[i, 'region_normalized'] = df.at[i, 'region']
+    df.at[i, 'office_normalized'] = df.at[i, 'office']
+    df.at[i, 'revenue_normalized'] = df.at[i, 'revenue']
 #
 # Let x represent the seven first column
 #
@@ -50,7 +50,7 @@ print(x_train.head(5))
 #
 # Select numerical columns which needs to be normalized
 #
-print("Start normalizing columns for Region, office and revenue...")
+print("Start normalizing columns for region, office and revenue...")
 train_norm = x_train[x_train.columns[3:]]
 test_norm = x_test[x_test.columns[3:]]
 #

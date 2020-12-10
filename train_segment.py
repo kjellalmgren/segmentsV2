@@ -1,19 +1,25 @@
 from __future__ import absolute_import, division, print_function, unicode_literals
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+
 import tensorflow as tf
 from tensorflow import keras
 import pandas as pd
 import numpy as np
-import os
-
 import datetime
-
-CSV_COLUMN_NAMES = ['Region', 'Office', 'Revenue', 'Segment']
+#
+#from sklearn.model_selection import train_test_split
+#from tensorflow.keras import layers
+from tensorflow.keras.layers.experimental import preprocessing
+#
+# Define all column in the dataset
+CSV_COLUMN_NAMES = ['region', 'office', 'revenue', 'segment']
+# Target column to predict
 LABELS = ['mini', 'micro', 'mellan', 'stor']
-
 #
 # train the model
 #
-def make_input_fn(data_df, label_df, num_epochs=5, shuffle=True, batch_size=32):
+def make_input_fn(data_df, label_df, num_epochs=10, shuffle=True, batch_size=32):
     # Inner function, this will be returned
     def input_function():
         # create tf.data.Dataset object with data and its labrl
@@ -24,14 +30,13 @@ def make_input_fn(data_df, label_df, num_epochs=5, shuffle=True, batch_size=32):
         return ds # return batch of the dataset
     return input_function # return a function object of use
 #
-#
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Eager execution: {}".format(tf.executing_eagerly()))
 
-print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
-print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
+print("Num CPUs Available: ", len(tf.config.list_physical_devices('CPU')))
 
-def input_fn1(features, labels, training=True, batch_size=256):
+def input_fn1(features, labels, training=True, batch_size=32):
         # Convert the inputs to a Dataset.
         dataset = tf.data.Dataset.from_tensor_slices((dict(features), labels))
         #tf.keras.backend.set_floatx('float64')
@@ -40,9 +45,9 @@ def input_fn1(features, labels, training=True, batch_size=256):
             dataset = dataset.shuffle(10000).repeat()
         return dataset.batch(batch_size)
 #
-
-with tf.device("/device:gpu:0"):
-    print("Using nvidia 2070 super GPU")
+# with tf.device("/device:GPU:0"):
+with tf.device("/device:GPU:0"):
+    print("Using nvidia 2070 super, 2560 Cuda GPU cores")
     train_path = tf.keras.utils.get_file(
         "segment_training_v4.csv", "http://localhost:8443/segment_training_v4")
     test_path = tf.keras.utils.get_file(
@@ -62,8 +67,10 @@ with tf.device("/device:gpu:0"):
     print(dfeval.head())
     #
     # SEGMENTS = dftrain["Segment"].unique()
-    y_train = dftrain.pop('Segment')
-    y_eval = dfeval.pop('Segment')
+    #
+    # Drop target column that should be used for prediction
+    y_train = dftrain.pop('segment')
+    y_eval = dfeval.pop('segment')
     #print(SEGMENTS)
     print("-- dftrain.head() ------------------------------------------------------")
     print(dftrain.head())
@@ -86,9 +93,35 @@ with tf.device("/device:gpu:0"):
     #    feature_columns.append(tf.feature_column.numeric_column(feature_name, dtype=tf.float32))
     #
     # Feature columns describe how to use the input.
+    def get_normalization_layer(name, dataset):
+        # Create a Normalization layer for our feature.
+        normalizer = preprocessing.Normalization()
+        # Prepare a Dataset that only yields our feature.
+        feature_ds = dataset.map(lambda x, y: x[name])
+        # Learn the statistics of the data.
+        normalizer.adapt(feature_ds)
+        return normalizer
+    #
     my_feature_columns = []
+    #vocabulary = []
+    # ================ Comment out =======================
     for key in dftrain.keys():
-        my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        if key in 'revenue': {
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        }
+        if key in 'region': {
+            #vocabulary = set(dftrain[key].unique())
+            #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
+            #my_feature_columns.append(tf.feature_column.numeric_column(key=key, normalizer_fn=get_normalization_layer(key, dftrain)))
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        }
+        if key in 'office': {
+            #vocabulary = dftrain[key].unique()
+            #my_feature_columns.append(tf.feature_column.categorical_column_with_vocabulary_list(key=key, vocabulary))
+            my_feature_columns.append(tf.feature_column.numeric_column(key=key))
+        }
+    #
+    # ================ Comment out =======================
     print("-my_feature_columns ------------------------------------------------------")
     print(my_feature_columns)
     print("------------------------------------------------------------------------")
@@ -97,7 +130,7 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[100, 50],
+        hidden_units=[300, 50],
         optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
@@ -107,7 +140,7 @@ with tf.device("/device:gpu:0"):
 
     train_result = classifier.train(
         input_fn=lambda: input_fn1(dftrain, y_train, training=True), 
-        steps=40000)
+        steps=300000)
     #   
     # results = train_result.get_variable_names()
     #for result in train_result.get_variable_names():

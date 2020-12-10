@@ -10,7 +10,7 @@ import datetime
 print("Tensorflow version: {}".format(tf.version.VERSION))
 print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('GPU')))
 print("Num CPUs Available: ", len(tf.config.experimental.list_physical_devices('CPU')))
-COLUMN_NAMES = ['Region', 'Office', 'Revenue']
+COLUMN_NAMES = ['region', 'office', 'revenue']
 SPECIES = ['mini', 'micro', 'mellan', 'stor']
 
 with tf.device("/device:gpu:0"):
@@ -29,21 +29,22 @@ with tf.device("/device:gpu:0"):
     classifier = tf.estimator.DNNClassifier(
         feature_columns=my_feature_columns,
         # Two hidden layers of 30 and 10 nodes respectively.
-        hidden_units=[64, 32, 8],
-        optimizer='Adam',
+        hidden_units=[30, 10],
+        optimizer='Adagrad',
         activation_fn=tf.nn.relu,
         dropout=None,
-        # The model must choose between 3 classes.
+        # The model must choose between 4 classes. 0-3 classes.
         n_classes=4,
         model_dir="saved_model/segment_model_v5")
     #
 
     # ###################################################################
+    # Batch_Size=256
     def input_fn(features, batch_size=256):
         # Convert the inputs to a Dataset without labels.
         return tf.data.Dataset.from_tensor_slices(dict(features)).batch(batch_size)
 
-    features = ['Region', 'Office', 'Revenue']
+    features = ['region', 'office', 'revenue']
     class_names = ['mini', 'micro', 'mellan', 'stor']
     #predict = {}
 
@@ -56,10 +57,16 @@ with tf.device("/device:gpu:0"):
     #        if not val.isdigit(): valid = False
     #    predict[feature] = [float(val)]
 
+    ##predict_x = {
+    ##    'Region': [10, 10, 10, 10, 10],
+    ##    'Office': [11, 12, 11, 12, 11],
+    ##    'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+    ##}
+
     predict_x = {
-        'Region': [10.0, 10.0, 10.0, 10.0, 10.0],
-        'Office': [11.0, 12.0, 11.0, 12.0, 11.0],
-        'Revenue': [1948.0, 22000.0, 65000.0, 52520.8, 89114.0],
+        'region': [10, 10, 10, 10, 10],
+        'office': [11, 11, 11, 11, 11],
+        'revenue': [2118256.0, 4822290.0, 8827360.0, 145451.0, 11000000.0],
     }
 
     #     
@@ -68,9 +75,9 @@ with tf.device("/device:gpu:0"):
     for pred_dict in predictions:
         class_id = pred_dict['class_ids'][0]
         probability = pred_dict['probabilities'][class_id]
-        print(pred_dict)
-        #print('Prediction is "{}" ({:.1f}%)'.format(
-        #    SPECIES[class_id], 100 * probability))
-        print('Prediction is "{}" ({:f}%)'.format(
-            SPECIES[class_id], probability))
+        #print(pred_dict)
+        print('Prediction is "{}" ({:.1f}%)'.format(
+            SPECIES[class_id], 100 * probability))
+        #print('Prediction is "{}" ({:f}%)'.format(
+        #    SPECIES[class_id], probability))
 #

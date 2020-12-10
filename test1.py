@@ -30,7 +30,7 @@ df = pd.read_csv('datasets/segment_training_v5.csv')
 #Select predictors
 x = df[df.columns[:3]]
 #Target variable 
-y = df.Segment
+y = df.segment
 print("x: {}", x)
 print("y: {}", y)
 #Split data into train and test 

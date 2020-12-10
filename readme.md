@@ -5,6 +5,11 @@
 
     https://www.tensorflow.org/tutorials/keras/save_and_load
 
+## Turn on percicstence on nvidia 2070 super
+    $ sudo nvidia-smi -pm 1
+    $ sudo nvidia-smi -pm 0
+    nvidia-smi -i 0 -q      # stdout of status information
+
 ## Matplotlib for python
 
     $ which matplotlib
@@ -17,7 +22,7 @@
 
 ## Tensorboard
 
-    $ sudo pip3 install tensorboard
+    $ pip3 install tensorboard
     # show tensorboard, which tensorboard 
     # /home/kjell
     $ mkdir logdir
@@ -30,8 +35,8 @@
 
 ## Profile plugin for tensorboard
 
-    $ sudo pip list
-    $ sudo pip install -U tensorboard-plugin-profile
+    $ pip list | grep tensorb*
+    pip3 install -U tensorboard-plugin-profile
 
 ## Tensorflow uninstall
 
@@ -85,4 +90,10 @@ Distribution for each region/office is:
 |Office|Integer|Categorical column
 |Revenue|float64|Feature column
 |Segment|Integer|Target (label)
-    
+
+
+## Articles
+
+## Demonstration of TensorFlow Feature Columns (tf.feature_column)
+
+https://medium.com/ml-book/demonstration-of-tensorflow-feature-columns-tf-feature-column-3bfcca4ca5c4
