@@ -9,3 +9,4 @@ saved_model/iris_model/*.*
 saved_model/segment_model/*.*
 # Dependency directories (remove the comment below to include it)
 # vendor/
+.vscode/
