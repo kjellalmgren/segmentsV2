@@ -17,11 +17,16 @@ print("Python version: {}".format(sys.version))
 print("Torch: {}".format(torch.__version__))
 print("Torchvision: {}".format(torchvision.__version__))
 print("----------")
-print(tf.config.list_physical_devices())
-print("**********")
+print("Available devices for Machine Learning...")
+# for input in all_inputs:
+for device in tf.config.list_physical_devices():
+    print(device)
+
+print("")
 print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 print("==================")
-print("GPU available: ", tf.test.is_gpu_available())
+# print("GPU available: ", tf.test.is_gpu_available()) # Depricated
+print("GPU Available: ", tf.config.list_physical_devices('GPU'))
 print("==================")
 #print("Tensorflow build with cuda: ", tf.test.is_built_with_cuda())
 print("==================")
